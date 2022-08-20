@@ -1,7 +1,7 @@
 import 'package:amertat/pages/new_customer.dart';
+import 'package:amertat/pages/new_order.dart';
 import 'package:amertat/widgets/button.dart';
 import 'package:flutter/material.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -47,14 +47,17 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             MyButton(
-              text: 'ثبت مشتری جدید',
-              callback: () =>
-                Navigator.push(
+                text: 'ثبت مشتری جدید',
+                callback: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const NewCustomer()))
-
-            )
+                        builder: (context) => const NewCustomer()))),
+            MyButton(
+                text: 'ثبت سفارش جدید',
+                callback: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const NewOrder())))
           ],
         ),
       ),

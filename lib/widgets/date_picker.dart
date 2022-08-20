@@ -70,6 +70,7 @@ class _MyDatePickerState extends State<MyDatePicker> {
                             picked?.month as int, picked?.day as int);
 
                         persianLabel = "${j.year}-${j.month}-${j.day}";
+                        // persianLabel=picked?.formatCompactDate();
                         Gregorian g = Gregorian.fromJalali(j);
                         georgianLabel = "${g.year}-${g.month}-${g.day}";
 
@@ -90,7 +91,7 @@ class _MyDatePickerState extends State<MyDatePicker> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(width: 0.9, color: Colors.blue),
+                           BorderSide(width: 0.9, color: Theme.of(context).primaryColor),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),

@@ -9,26 +9,31 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 200,
-      height: 50,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          alignment: Alignment.center,
-          onPrimary: Colors.lightBlueAccent,
-          elevation: 3,
-          primary: Theme.of(context).primaryColor,
-        ),
-        onPressed: () => callback(),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: 'IranYekan',
-            fontSize: 15,
+    return Column(
+      children: [
+        SizedBox(
+          width: 200,
+          height: 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              alignment: Alignment.center,
+              onPrimary: Colors.lightBlueAccent,
+              elevation: 3,
+              primary: Theme.of(context).primaryColor,
+            ),
+            onPressed: () => callback(),
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'IranYekan',
+                fontSize: 15,
+              ),
+            ),
           ),
         ),
-      ),
+        const SizedBox(height: 30,)
+      ],
     );
   }
 

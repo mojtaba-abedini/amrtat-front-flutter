@@ -41,7 +41,7 @@ class _NewCustomerState extends State<NewCustomer> {
                   callback: (value) => newCustomerPhone = value),
               MyDatePicker(
                   title: 'تاریخ تماس',
-                  callback: (jalaliDate,georgianDate) => newCustomerOrderDescription = georgianDate),
+                  callback: (jalaliDate,georgianDate) => newCustomerContactDate = jalaliDate),
               MyTextboxTitle(
                   title: 'نوع سفارش',
                   isNumber: false,
