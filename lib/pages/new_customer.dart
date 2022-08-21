@@ -29,6 +29,9 @@ class _NewCustomerState extends State<NewCustomer> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(
+                height: 20,
+              ),
               MyTextboxTitle(
                   title: 'نام و نام خانوادگی',
                   isNumber: false,
@@ -51,9 +54,7 @@ class _NewCustomerState extends State<NewCustomer> {
                 height: 20,
               ),
               MyButton(text: 'ذخیره', callback: onPressButton),
-              const SizedBox(
-                height: 30,
-              )
+
             ],
           ),
         ),

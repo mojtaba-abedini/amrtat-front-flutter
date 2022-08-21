@@ -50,6 +50,7 @@ class _MyDatePickerState extends State<MyDatePicker> {
                 TextField(
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
+                  readOnly: true,
                   controller: pickedDate,
                   cursorColor: Colors.grey,
                   textAlign: TextAlign.right,

@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
-
 import 'package:amertat/store.dart';
 
 class MyDropDown extends StatefulWidget {
-  const MyDropDown({Key? key, required this.title}) : super(key: key);
+  const MyDropDown({
+    Key? key,
+    required this.title,
+    required this.callback,
+    required this.initIndex,
+    required this.initStateIndex,
+  }) : super(key: key);
 
   final String title;
+  final Function callback;
+  final Function initIndex;
+  final Function initStateIndex;
 
   @override
   State<MyDropDown> createState() => _MyDropDownState();
 }
 
 class _MyDropDownState extends State<MyDropDown> {
-  late TextEditingController pickedDate = TextEditingController();
 
-  String dropdownValue = orderType[0]['name'] as String;
+  late TextEditingController pickedDate = TextEditingController();
+  late String dropdownValue = widget.initIndex() as String;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.initStateIndex();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +56,6 @@ class _MyDropDownState extends State<MyDropDown> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                 decoration: BoxDecoration(
-
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.5),
@@ -73,6 +86,7 @@ class _MyDropDownState extends State<MyDropDown> {
                     onChanged: (String? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
+                        widget.callback(newValue);
                       });
                     },
                     items: orderType.map((value) {
