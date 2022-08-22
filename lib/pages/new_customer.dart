@@ -35,11 +35,13 @@ class _NewCustomerState extends State<NewCustomer> {
               MyTextboxTitle(
                   title: 'نام و نام خانوادگی',
                   isNumber: false,
+                  isPrice: false,
                   lengthLimit: 0,
                   callback: (value) => newCustomerName = value),
               MyTextboxTitle(
                   title: 'تلفن تماس',
                   isNumber: true,
+                  isPrice: false,
                   lengthLimit: 10,
                   callback: (value) => newCustomerPhone = value),
               MyDatePicker(
@@ -48,6 +50,13 @@ class _NewCustomerState extends State<NewCustomer> {
               MyTextboxTitle(
                   title: 'نوع سفارش',
                   isNumber: false,
+                  isPrice: false,
+                  lengthLimit: 0,
+                  callback: (value) => newCustomerOrderDescription = value),
+              MyTextboxTitle(
+                  title: 'تعداد درخواستی',
+                  isNumber: true,
+                  isPrice: false,
                   lengthLimit: 0,
                   callback: (value) => newCustomerOrderDescription = value),
               const SizedBox(

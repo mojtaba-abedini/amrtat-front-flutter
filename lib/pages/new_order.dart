@@ -5,7 +5,6 @@ import 'package:amertat/store.dart';
 import '../widgets/date_picker.dart';
 import '../widgets/textbox_title.dart';
 
-
 class NewOrder extends StatefulWidget {
   const NewOrder({Key? key}) : super(key: key);
 
@@ -16,7 +15,7 @@ class NewOrder extends StatefulWidget {
 class _NewOrderState extends State<NewOrder> {
   void onPressButton() {
     Navigator.pop(context);
-    print(newOrderType);
+    print(newOrderFirstPrice);
   }
 
   @override
@@ -37,21 +36,37 @@ class _NewOrderState extends State<NewOrder> {
               MyTextboxTitle(
                   title: 'نام و نام خانوادگی مشتری',
                   isNumber: false,
+                  isPrice: false,
                   lengthLimit: 0,
                   callback: (value) => newOrderName = value),
               MyTextboxTitle(
                   title: 'تلفن تماس',
                   isNumber: true,
+                  isPrice: false,
                   lengthLimit: 10,
                   callback: (value) => newOrderPhone = value),
               MyDropDown(
                   title: 'نوع سفارش',
-                  // set first value of dropdown
                   initIndex: () => orderType[0]['name'],
-                  // set variable by first value of dropdown
                   initStateIndex: () =>
                       newOrderType = orderType[0]['name'] as String,
+                  mapVariabale: orderType,
+                  mapFeild: 'name',
                   callback: (value) => newOrderType = value),
+              MyDropDown(
+                  title: 'سایز محصول',
+                  initIndex: () => orderSize[0]['size'],
+                  initStateIndex: () =>
+                      newOrderSize = orderSize[0]['size'] as String,
+                  mapVariabale: orderSize,
+                  mapFeild: 'size',
+                  callback: (value) => newOrderSize = value),
+              MyTextboxTitle(
+                  title: 'مبغ واریزی',
+                  isNumber: true,
+                  isPrice: true,
+                  lengthLimit: 0,
+                  callback: (value) => newOrderFirstPrice = value),
               MyDatePicker(
                   title: 'تاریخ تماس',
                   callback: (jalaliDate, georgianDate) =>
@@ -59,7 +74,10 @@ class _NewOrderState extends State<NewOrder> {
               const SizedBox(
                 height: 20,
               ),
-              MyButton(text: 'ذخیره', callback: onPressButton)
+              MyButton(text: 'ذخیره', callback: onPressButton),
+              const SizedBox(
+                height: 10,
+              ),
             ],
           ),
         )));

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:amertat/store.dart';
 
 class MyDropDown extends StatefulWidget {
   const MyDropDown({
     Key? key,
     required this.title,
+    required this.mapVariabale,
+    required this.mapFeild,
     required this.callback,
     required this.initIndex,
     required this.initStateIndex,
   }) : super(key: key);
 
   final String title;
+  final List<Map<String, String>> mapVariabale;
+  final String mapFeild;
   final Function callback;
   final Function initIndex;
   final Function initStateIndex;
@@ -20,7 +23,6 @@ class MyDropDown extends StatefulWidget {
 }
 
 class _MyDropDownState extends State<MyDropDown> {
-
   late TextEditingController pickedDate = TextEditingController();
   late String dropdownValue = widget.initIndex() as String;
 
@@ -89,12 +91,12 @@ class _MyDropDownState extends State<MyDropDown> {
                         widget.callback(newValue);
                       });
                     },
-                    items: orderType.map((value) {
+                    items: widget.mapVariabale.map((value) {
                       return DropdownMenuItem<String>(
                         alignment: Alignment.center,
-                        value: value['name'] as String,
+                        value: value[widget.mapFeild] as String,
                         child: Text(
-                          value['name'] as String,
+                          value[widget.mapFeild] as String,
                           style: const TextStyle(
                               fontFamily: 'IranYekan', fontSize: 15),
                         ),
