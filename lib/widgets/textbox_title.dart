@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:amertat/store.dart';
 
-class MyTextboxTitle extends StatefulWidget {
+class MyTextboxTitle extends StatelessWidget {
   MyTextboxTitle(
       {Key? key,
       required this.title,
@@ -18,12 +18,6 @@ class MyTextboxTitle extends StatefulWidget {
   final String title;
   final Function callback;
   final int lengthLimit;
-
-  @override
-  State<MyTextboxTitle> createState() => _MyTextboxTitleState();
-}
-
-class _MyTextboxTitleState extends State<MyTextboxTitle> {
   late TextEditingController textboxValue = TextEditingController();
 
   @override
@@ -39,8 +33,8 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                widget.title,
-                style: const TextStyle(color: Colors.black, fontSize: 17),
+                title,
+                style: const TextStyle(color: Colors.black87, fontSize: 17),
               ),
             ),
           ),
@@ -58,7 +52,7 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
                 borderRadius: BorderRadius.circular(5),
                 child: TextField(
                   onChanged: (content) {
-                    widget.callback(content);
+                    callback(content);
                   },
                   controller: textboxValue,
                   autofocus: true,
@@ -83,23 +77,24 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  keyboardType: widget.isNumber ? TextInputType.number : null,
-                  inputFormatters: widget.lengthLimit == 0 &&
-                          widget.isPrice == false
+                  keyboardType: isNumber ? TextInputType.number : null,
+                  inputFormatters: lengthLimit == 0 && isPrice == false
                       ? null
-                      : (widget.lengthLimit == 0 && widget.isPrice == true
+                      : (lengthLimit == 0 && isPrice == true
                           ? <TextInputFormatter>[
                               ThousandsSeparatorInputFormatter(),
                             ]
-                          : ((widget.lengthLimit != 0 && widget.isPrice == true
+                          : ((lengthLimit != 0 && isPrice == true
                               ? <TextInputFormatter>[
-                                  LengthLimitingTextInputFormatter(
-                                      widget.lengthLimit),
+                                  LengthLimitingTextInputFormatter(lengthLimit),
                                   ThousandsSeparatorInputFormatter(),
                                 ]
-                              : null))),
-
-                  //
+                              : ((lengthLimit != 0 && isPrice == false
+                                  ? <TextInputFormatter>[
+                                      LengthLimitingTextInputFormatter(
+                                          lengthLimit)
+                                    ]
+                                  : null))))),
                 ),
               ),
             ),

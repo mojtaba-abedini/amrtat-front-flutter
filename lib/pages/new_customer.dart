@@ -14,7 +14,6 @@ class NewCustomer extends StatefulWidget {
 class _NewCustomerState extends State<NewCustomer> {
   void onPressButton() {
     Navigator.pop(context);
-    print(newCustomerContactDate);
   }
 
   @override
@@ -58,7 +57,7 @@ class _NewCustomerState extends State<NewCustomer> {
                   isNumber: true,
                   isPrice: false,
                   lengthLimit: 0,
-                  callback: (value) => newCustomerOrderDescription = value),
+                  callback: (value) => newCustomerOrderCount = value),
               const SizedBox(
                 height: 20,
               ),

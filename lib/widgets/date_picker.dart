@@ -2,25 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:amertat/libraries/persian_date_picker/persian_datetime_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-class MyDatePicker extends StatefulWidget {
-  const MyDatePicker({Key? key, required this.title, required this.callback})
+class MyDatePicker extends StatelessWidget {
+  MyDatePicker({Key? key, required this.title, required this.callback})
       : super(key: key);
 
-  final String title;
-  final Function callback;
-
-  @override
-  State<MyDatePicker> createState() => _MyDatePickerState();
-}
-
-class _MyDatePickerState extends State<MyDatePicker> {
   late TextEditingController pickedDate = TextEditingController();
   var persianLabel;
   var georgianLabel;
+  String title;
+  Function callback;
 
   void refreshDate() {
     pickedDate.text = persianLabel;
-    widget.callback(persianLabel, georgianLabel);
+    callback(persianLabel, georgianLabel);
   }
 
   @override
@@ -36,8 +30,8 @@ class _MyDatePickerState extends State<MyDatePicker> {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                widget.title,
-                style: const TextStyle(color: Colors.black, fontSize: 17),
+                title,
+                style: const TextStyle(color: Colors.black87, fontSize: 17),
               ),
             ),
             const SizedBox(
@@ -91,8 +85,8 @@ class _MyDatePickerState extends State<MyDatePicker> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                           BorderSide(width: 0.9, color: Theme.of(context).primaryColor),
+                      borderSide: BorderSide(
+                          width: 0.9, color: Theme.of(context).primaryColor),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),

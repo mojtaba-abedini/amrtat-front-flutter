@@ -46,7 +46,7 @@ class _MyDropDownState extends State<MyDropDown> {
               alignment: Alignment.centerRight,
               child: Text(
                 widget.title,
-                style: const TextStyle(color: Colors.black, fontSize: 17),
+                style: const TextStyle(color: Colors.black87, fontSize: 17),
               ),
             ),
             const SizedBox(
@@ -56,7 +56,7 @@ class _MyDropDownState extends State<MyDropDown> {
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
                 padding:
-                    const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -64,7 +64,7 @@ class _MyDropDownState extends State<MyDropDown> {
                         spreadRadius: 1,
                         blurRadius: 3,
                         offset:
-                            const Offset(0, 2), // changes position of shadow
+                        const Offset(0, 2), // changes position of shadow
                       ),
                     ],
                     color: Colors.white,
@@ -84,7 +84,7 @@ class _MyDropDownState extends State<MyDropDown> {
                     value: dropdownValue,
                     elevation: 16,
                     iconSize: 0,
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                     onChanged: (String? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
@@ -98,7 +98,7 @@ class _MyDropDownState extends State<MyDropDown> {
                         child: Text(
                           value[widget.mapFeild] as String,
                           style: const TextStyle(
-                              fontFamily: 'IranYekan', fontSize: 15),
+                              fontFamily: 'IranYekan', fontSize: 17),
                         ),
                       );
                     }).toList(),
@@ -116,3 +116,5 @@ class _MyDropDownState extends State<MyDropDown> {
     );
   }
 }
+
+

@@ -15,7 +15,7 @@ class NewOrder extends StatefulWidget {
 class _NewOrderState extends State<NewOrder> {
   void onPressButton() {
     Navigator.pop(context);
-    print(newOrderFirstPrice);
+
   }
 
   @override
@@ -61,16 +61,72 @@ class _NewOrderState extends State<NewOrder> {
                   mapVariabale: orderSize,
                   mapFeild: 'size',
                   callback: (value) => newOrderSize = value),
+              MyDropDown(
+                  title: 'سلفون',
+                  initIndex: () => orderAttribute[0]['name'],
+                  initStateIndex: () =>
+                      newOrderSize = orderAttribute[0]['name'] as String,
+                  mapVariabale: orderAttribute,
+                  mapFeild: 'name',
+                  callback: (value) => selefon = value),
+              MyDropDown(
+                  title: 'طلاکوب',
+                  initIndex: () => orderAttribute[0]['name'],
+                  initStateIndex: () =>
+                      newOrderSize = orderAttribute[0]['name'] as String,
+                  mapVariabale: orderAttribute,
+                  mapFeild: 'name',
+                  callback: (value) => talakoob = value),
+              MyDropDown(
+                  title: 'یووی و امباس',
+                  initIndex: () => orderAttribute[0]['name'],
+                  initStateIndex: () =>
+                      newOrderSize = orderAttribute[0]['name'] as String,
+                  mapVariabale: orderAttribute,
+                  mapFeild: 'name',
+                  callback: (value) => UV = value),
+              MyDropDown(
+                  title: 'لترپرس و خط تا برجسته',
+                  initIndex: () => orderAttribute[0]['name'],
+                  initStateIndex: () =>
+                      newOrderSize = orderAttribute[0]['name'] as String,
+                  mapVariabale: orderAttribute,
+                  mapFeild: 'name',
+                  callback: (value) => letterPress = value),
+              MyDropDown(
+                  title: 'صحافی و بسته بندی',
+                  initIndex: () => orderAttribute[0]['name'],
+                  initStateIndex: () =>
+                      newOrderSize = orderAttribute[0]['name'] as String,
+                  mapVariabale: orderAttribute,
+                  mapFeild: 'name',
+                  callback: (value) => sahafi = value),
               MyTextboxTitle(
-                  title: 'مبغ واریزی',
+                  title: 'مبلغ کل سفارش',
+                  isNumber: true,
+                  isPrice: true,
+                  lengthLimit: 0,
+                  callback: (value) => newOrderPrice = value),
+              MyTextboxTitle(
+                  title: 'مبلغ بیعانه',
                   isNumber: true,
                   isPrice: true,
                   lengthLimit: 0,
                   callback: (value) => newOrderFirstPrice = value),
+
               MyDatePicker(
-                  title: 'تاریخ تماس',
+                  title: 'تاریخ واریز بیعانه',
                   callback: (jalaliDate, georgianDate) =>
-                      newOrderDate = jalaliDate),
+                      newOrderFirstPriceDate = jalaliDate),
+
+              MyDropDown(
+                  title: 'بانک واریز بیعانه',
+                  initIndex: () => banks[0]['name'],
+                  initStateIndex: () =>
+                      newOrderBank = banks[0]['name'] as String,
+                  mapVariabale: banks,
+                  mapFeild: 'name',
+                  callback: (value) => newOrderBank = value),
               const SizedBox(
                 height: 20,
               ),
