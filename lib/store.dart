@@ -19,6 +19,14 @@ String UV= "";
 String letterPress= "";
 String sahafi= "";
 
+String printingFormPrice= "";
+String selefonPrise= "";
+String uvPrise= "";
+String letterPressPrise= "";
+
+String craftPrise= "";
+String glossePrise= "";
+
 
 List<Map<String, String>> orderType = [
   {'id': '1', 'name': 'کرافت'},
