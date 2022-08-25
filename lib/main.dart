@@ -1,11 +1,10 @@
 import 'package:amertat/pages/about.dart';
 import 'package:amertat/pages/base_information.dart';
 import 'package:amertat/pages/main_page.dart';
-import 'package:amertat/pages/new_customer.dart';
-import 'package:amertat/pages/new_order.dart';
+
 import 'package:amertat/pages/orders.dart';
 import 'package:amertat/pages/store_managment.dart';
-import 'package:amertat/widgets/button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -39,6 +38,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  final String logoFileName = 'assets/Logo.svg';
+
   late int _selectedDestination = 0;
 
   late List<Widget> _pages;
@@ -111,16 +113,14 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Center(
                 child: Container(
-                  color: Theme.of(context).primaryColor,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(16.0),
-                  height: 200,
-                  child: const ImageIcon(
-                    AssetImage("assets/Logo.png"),
-                    color: Colors.white,
-                    size: 140,
-                  ),
-                ),
+                    color: Theme.of(context).primaryColor,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(16.0),
+                    height: 200,
+                    child: SizedBox(
+                      height: 130,
+                      child: SvgPicture.asset(logoFileName),
+                    )),
               ),
               const Divider(
                 height: 1,

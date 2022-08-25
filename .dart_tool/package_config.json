@@ -62,10 +62,28 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "flutter_svg",
+      "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_svg-1.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///C:/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http-0.13.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http_parser-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "lints",
@@ -98,10 +116,28 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "path_drawing",
+      "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_drawing-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path_parsing",
+      "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_parsing-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "persian_datetime_picker",
       "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/persian_datetime_picker-2.5.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "petitparser",
+      "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/petitparser-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
     },
     {
       "name": "sky_engine",
@@ -146,10 +182,22 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "typed_data",
+      "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/typed_data-1.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "vector_math",
       "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/vector_math-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.14"
+    },
+    {
+      "name": "xml",
+      "rootUri": "file:///C:/Users/Mojtaba/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/xml-6.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "amertat",
@@ -158,7 +206,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-24T16:19:38.656445Z",
+  "generated": "2022-08-25T13:23:05.718702Z",
   "generator": "pub",
   "generatorVersion": "2.17.3"
 }

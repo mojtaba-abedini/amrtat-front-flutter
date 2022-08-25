@@ -4,6 +4,8 @@ import 'package:amertat/widgets/textbox_title.dart';
 import 'package:flutter/material.dart';
 import 'package:amertat/store.dart';
 
+
+
 class NewCustomer extends StatefulWidget {
   const NewCustomer({Key? key}) : super(key: key);
 
@@ -15,6 +17,8 @@ class _NewCustomerState extends State<NewCustomer> {
   void onPressButton() {
     Navigator.pop(context);
   }
+
+
 
   @override
   Widget build(BuildContext context) {

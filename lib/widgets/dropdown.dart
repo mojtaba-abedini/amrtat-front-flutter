@@ -12,7 +12,7 @@ class MyDropDown extends StatefulWidget {
   }) : super(key: key);
 
   final String title;
-  final List<Map<String, String>> mapVariabale;
+  final List mapVariabale;
   final String mapFeild;
   final Function callback;
   final Function initIndex;
