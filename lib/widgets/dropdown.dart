@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyDropDown extends StatefulWidget {
   const MyDropDown({
+
     Key? key,
     required this.title,
     required this.mapVariabale,
@@ -9,6 +10,8 @@ class MyDropDown extends StatefulWidget {
     required this.callback,
     required this.initIndex,
     required this.initStateIndex,
+    this.filterId
+
   }) : super(key: key);
 
   final String title;
@@ -17,6 +20,7 @@ class MyDropDown extends StatefulWidget {
   final Function callback;
   final Function initIndex;
   final Function initStateIndex;
+  final int? filterId;
 
   @override
   State<MyDropDown> createState() => _MyDropDownState();
@@ -30,7 +34,9 @@ class _MyDropDownState extends State<MyDropDown> {
   void initState() {
     super.initState();
     widget.initStateIndex();
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +91,10 @@ class _MyDropDownState extends State<MyDropDown> {
                     elevation: 16,
                     iconSize: 0,
                     style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+
                     onChanged: (String? newValue) {
                       setState(() {
+
                         dropdownValue = newValue!;
                         widget.callback(newValue);
                       });

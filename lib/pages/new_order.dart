@@ -7,6 +7,9 @@ import 'package:amertat/store.dart';
 import '../widgets/date_picker.dart';
 import '../widgets/textbox_title.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
+
+StreamController<String> streamController = StreamController<String>();
 
 class NewOrder extends StatefulWidget {
   const NewOrder({Key? key}) : super(key: key);
@@ -20,6 +23,7 @@ class _NewOrderState extends State<NewOrder> {
 
   List _loadedJens = [];
   List _loadedSize = [];
+  List _filteredLoadedSize = [];
 
   Future<void> _fetchJens() async {
     const apiUrl = getAllJens;
@@ -36,8 +40,8 @@ class _NewOrderState extends State<NewOrder> {
     final data = json.decode(response.body);
     setState(() {
       _loadedSize = data;
-
     });
+    filterSizes(_loadedJens[0]['id']);
     _isLoading = false;
   }
 
@@ -46,12 +50,23 @@ class _NewOrderState extends State<NewOrder> {
     super.initState();
     _fetchJens();
     _fetchSize();
-
   }
 
   void onPressButton() {
     Navigator.pop(context);
-    print(newOrderSize);
+  }
+
+  filterSizes(int id) {
+    _filteredLoadedSize =
+        _loadedSize.where((o) => o['karbari_id'] == id).toList();
+    size=_filteredLoadedSize;
+  }
+
+  getIdByName(String value) {
+    final foundSelected =
+        _loadedJens.singleWhere((element) => element['name'] == value);
+    filterSizes(foundSelected['id']);
+    print(_filteredLoadedSize);
   }
 
   @override
@@ -90,19 +105,23 @@ class _NewOrderState extends State<NewOrder> {
                             newOrderType = _loadedJens[0]['name'],
                         mapVariabale: _loadedJens,
                         mapFeild: 'name',
-                        callback: (value) => newOrderType = value),
+                        callback: (value) {
+                          newOrderType = value;
+                          getIdByName(value);
+                        }),
                     MyDropDown(
                         title: 'سایز محصول',
-                        initIndex: () => _loadedSize[0]['name'],
-                        initStateIndex: () => newOrderSize = _loadedSize[0]['name'],
-                        mapVariabale: _loadedSize,
+                        initIndex: () => _filteredLoadedSize[0]['name'],
+                        initStateIndex: () =>
+                            newOrderSize = _filteredLoadedSize[0]['name'],
+                        mapVariabale: _filteredLoadedSize,
                         mapFeild: 'name',
                         callback: (value) => newOrderSize = value),
                     MyDropDown(
                         title: 'سلفون',
                         initIndex: () => orderAttribute[0]['name'],
                         initStateIndex: () =>
-                        newOrderType = orderAttribute[0]['name'] as String,
+                            newOrderType = orderAttribute[0]['name'] as String,
                         mapVariabale: orderAttribute,
                         mapFeild: 'name',
                         callback: (value) => selefon = value),
@@ -110,7 +129,7 @@ class _NewOrderState extends State<NewOrder> {
                         title: 'طلاکوب',
                         initIndex: () => orderAttribute[0]['name'],
                         initStateIndex: () =>
-                        newOrderType = orderAttribute[0]['name'] as String,
+                            newOrderType = orderAttribute[0]['name'] as String,
                         mapVariabale: orderAttribute,
                         mapFeild: 'name',
                         callback: (value) => talakoob = value),
@@ -118,7 +137,7 @@ class _NewOrderState extends State<NewOrder> {
                         title: 'یووی و امباس',
                         initIndex: () => orderAttribute[0]['name'],
                         initStateIndex: () =>
-                        newOrderType = orderAttribute[0]['name'] as String,
+                            newOrderType = orderAttribute[0]['name'] as String,
                         mapVariabale: orderAttribute,
                         mapFeild: 'name',
                         callback: (value) => UV = value),
@@ -126,7 +145,7 @@ class _NewOrderState extends State<NewOrder> {
                         title: 'لترپرس و خط تا برجسته',
                         initIndex: () => orderAttribute[0]['name'],
                         initStateIndex: () =>
-                        newOrderType = orderAttribute[0]['name'] as String,
+                            newOrderType = orderAttribute[0]['name'] as String,
                         mapVariabale: orderAttribute,
                         mapFeild: 'name',
                         callback: (value) => letterPress = value),
@@ -134,7 +153,7 @@ class _NewOrderState extends State<NewOrder> {
                         title: 'صحافی و بسته بندی',
                         initIndex: () => orderAttribute[0]['name'],
                         initStateIndex: () =>
-                        newOrderType = orderAttribute[0]['name'] as String,
+                            newOrderType = orderAttribute[0]['name'] as String,
                         mapVariabale: orderAttribute,
                         mapFeild: 'name',
                         callback: (value) => sahafi = value),
