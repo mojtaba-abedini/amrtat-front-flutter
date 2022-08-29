@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 
 class MyDropDown extends StatefulWidget {
-  const MyDropDown({
-
-    Key? key,
-    required this.title,
-    required this.mapVariabale,
-    required this.mapFeild,
-    required this.callback,
-    required this.initIndex,
-    required this.initStateIndex,
-    this.filterId
-
-  }) : super(key: key);
+  const MyDropDown(
+      {Key? key,
+      required this.title,
+      required this.mapVariabale,
+      required this.mapFeild,
+      required this.callback,
+      required this.initIndex,
+      required this.initStateIndex,
+      this.isRefresh})
+      : super(key: key);
 
   final String title;
   final List mapVariabale;
@@ -20,7 +18,7 @@ class MyDropDown extends StatefulWidget {
   final Function callback;
   final Function initIndex;
   final Function initStateIndex;
-  final int? filterId;
+  final bool? isRefresh;
 
   @override
   State<MyDropDown> createState() => _MyDropDownState();
@@ -30,13 +28,12 @@ class _MyDropDownState extends State<MyDropDown> {
   late TextEditingController pickedDate = TextEditingController();
   late String dropdownValue = widget.initIndex() as String;
 
+
   @override
   void initState() {
     super.initState();
     widget.initStateIndex();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +59,7 @@ class _MyDropDownState extends State<MyDropDown> {
               child: Container(
                 margin: const EdgeInsets.only(top: 5),
                 padding:
-                const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -70,7 +67,7 @@ class _MyDropDownState extends State<MyDropDown> {
                         spreadRadius: 1,
                         blurRadius: 3,
                         offset:
-                        const Offset(0, 2), // changes position of shadow
+                            const Offset(0, 2), // changes position of shadow
                       ),
                     ],
                     color: Colors.white,
@@ -90,16 +87,24 @@ class _MyDropDownState extends State<MyDropDown> {
                     value: dropdownValue,
                     elevation: 16,
                     iconSize: 0,
-                    style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
-
+                    style: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
                     onChanged: (String? newValue) {
                       setState(() {
-
                         dropdownValue = newValue!;
-                        widget.callback(newValue);
                       });
+
+                      // setState(() {
+                      //   widget.mapVariabale;
+                      //   dropdownValue = newValue!;
+                      //   widget.callback(newValue);
+                      //   //print("map variable ${widget.mapVariabale}");
+                      // });
                     },
                     items: widget.mapVariabale.map((value) {
+                      // setState(() {
+                      //   dropdownValue = widget.mapVariabale[0]['name'];
+                      // });
                       return DropdownMenuItem<String>(
                         alignment: Alignment.center,
                         value: value[widget.mapFeild] as String,
@@ -124,5 +129,3 @@ class _MyDropDownState extends State<MyDropDown> {
     );
   }
 }
-
-

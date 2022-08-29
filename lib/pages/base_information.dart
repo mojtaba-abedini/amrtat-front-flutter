@@ -1,8 +1,11 @@
-import 'package:amertat/pages/paper_price.dart';
-import 'package:amertat/pages/services_price.dart';
+import 'package:amertat/pages/base_information/paper_price.dart';
+import 'package:amertat/pages/base_information/stores.dart';
+import 'package:amertat/pages/base_information/vaheds.dart';
+
 import 'package:flutter/material.dart';
 
 import '../widgets/button.dart';
+import 'base_information/services_price.dart';
 
 
 class BaseInformation extends StatefulWidget {
@@ -37,7 +40,18 @@ class _BaseInformationState extends State<BaseInformation> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const ServicesPrice()))),
-
+            MyButton(
+                text: 'انبارها',
+                callback: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Stores()))),
+            MyButton(
+                text: 'واحدها',
+                callback: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Vaheds()))),
           ],
         ),
       ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../widgets/button.dart';
-import 'new_customer.dart';
-import 'new_order.dart';
+import 'home/new_customer.dart';
+import 'home/new_order.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -12,8 +11,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

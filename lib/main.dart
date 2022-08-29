@@ -1,9 +1,11 @@
-import 'package:amertat/pages/about.dart';
+import 'package:amertat/pages/base_information/about.dart';
 import 'package:amertat/pages/base_information.dart';
+
+import 'package:amertat/pages/home/store_managment.dart';
 import 'package:amertat/pages/main_page.dart';
 
 import 'package:amertat/pages/orders.dart';
-import 'package:amertat/pages/store_managment.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 
