@@ -49,7 +49,7 @@ class MyDatePicker extends StatelessWidget {
                   cursorColor: Colors.grey,
                   textAlign: TextAlign.right,
                   style: const TextStyle(
-                    fontSize: 16,
+                      fontSize: 18, fontWeight: FontWeight.bold
                   ),
                   decoration: InputDecoration(
                     suffixIcon: IconButton(

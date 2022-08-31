@@ -26,6 +26,7 @@ class _NewOrderState extends State<NewOrder> {
   String _selectedSize = "";
   List _loadedJens = [];
   List _loadedSize = [];
+  List _loadedBank = [];
   List _filteredLoadedSize = [];
 
   Future<void> _fetchJens() async {
@@ -33,7 +34,7 @@ class _NewOrderState extends State<NewOrder> {
     final response = await http.get(Uri.parse(apiUrl));
     final data = json.decode(response.body);
     setState(() {
-      _loadedJens = data;
+      _loadedJens = data['data'];
     });
   }
 
@@ -42,16 +43,27 @@ class _NewOrderState extends State<NewOrder> {
     final response = await http.get(Uri.parse(apiUrl));
     final data = json.decode(response.body);
     setState(() {
-      _loadedSize = data;
+      _loadedSize = data['data'];
     });
     filterSizes(_loadedJens[0]['id']);
     _isLoading = false;
+  }
+
+  Future<void> _fetchBank() async {
+    const apiUrl = getAllBank;
+    final response = await http.get(Uri.parse(apiUrl));
+    final data = json.decode(response.body);
+    setState(() {
+      _loadedBank = data['data'];
+    });
+
   }
 
   @override
   void initState() {
     super.initState();
     _fetchJens();
+    _fetchBank();
     _fetchSize();
   }
 
@@ -360,10 +372,10 @@ class _NewOrderState extends State<NewOrder> {
                             newOrderFirstPriceDate = jalaliDate),
                     MyDropDown(
                         title: 'بانک واریز بیعانه',
-                        initIndex: () => banks[0]['name'],
+                        initIndex: () => _loadedBank[0]['name'],
                         initStateIndex: () =>
-                            newOrderBank = banks[0]['name'] as String,
-                        mapVariabale: banks,
+                            newOrderBank = _loadedBank[0]['name'] as String,
+                        mapVariabale: _loadedBank,
                         mapFeild: 'name',
                         callback: (value) => newOrderBank = value),
                     const SizedBox(

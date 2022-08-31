@@ -1,3 +1,4 @@
+import 'package:amertat/pages/base_information/banks.dart';
 import 'package:amertat/pages/base_information/paper_price.dart';
 import 'package:amertat/pages/base_information/stores.dart';
 import 'package:amertat/pages/base_information/vaheds.dart';
@@ -52,6 +53,12 @@ class _BaseInformationState extends State<BaseInformation> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const Vaheds()))),
+            MyButton(
+                text: 'بانک ها',
+                callback: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Banks()))),
           ],
         ),
       ),
