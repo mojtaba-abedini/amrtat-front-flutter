@@ -7,22 +7,23 @@ import '../../api.dart';
 import '../../widgets/button.dart';
 import '../../widgets/textbox_title.dart';
 
-class Vaheds extends StatefulWidget {
-  const Vaheds({Key? key}) : super(key: key);
+class Grams extends StatefulWidget {
+  const Grams({Key? key}) : super(key: key);
 
   @override
-  State<Vaheds> createState() => _VahedsState();
+  State<Grams> createState() => _GramsState();
 }
 
-class _VahedsState extends State<Vaheds> {
+class _GramsState extends State<Grams> {
 
   bool _isLoading = true;
-  late String name;
+  late String gram;
   late int id;
-  static const apiUrl = VahedApi;
+  static const apiUrl = GramApi;
   List _loadedList = [];
 
   Future<void> _fetch() async {
+
     final response = await http.get(Uri.parse(apiUrl));
     final data = json.decode(response.body);
     setState(() {
@@ -37,7 +38,7 @@ class _VahedsState extends State<Vaheds> {
       _isLoading = true;
     });
     Navigator.pop(context, true);
-    http.Response response = await create(name);
+    http.Response response = await create(gram);
     print(response.body);
 
     _fetch();
@@ -48,7 +49,7 @@ class _VahedsState extends State<Vaheds> {
       _isLoading = true;
     });
     Navigator.pop(context);
-    http.Response response = await edit(name, id);
+    http.Response response = await edit(gram, id);
     print(response.body);
     _fetch();
   }
@@ -63,14 +64,14 @@ class _VahedsState extends State<Vaheds> {
     _fetch();
   }
 
-  Future<http.Response> edit(String name, int id) {
+  Future<http.Response> edit(String gram, int id) {
     return http.put(
       Uri.parse("$apiUrl/$id"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'name': name,
+        'gram': gram,
       }),
     );
   }
@@ -84,14 +85,14 @@ class _VahedsState extends State<Vaheds> {
     );
   }
 
-  Future<http.Response> create(String name) {
+  Future<http.Response> create(String gram) {
     return http.post(
       Uri.parse(apiUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'name': name,
+        'gram': gram,
       }),
     );
   }
@@ -107,7 +108,7 @@ class _VahedsState extends State<Vaheds> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('واحدها'),
+        title: const Text('گرماژ'),
         centerTitle: true,
         toolbarHeight: 75,
       ),
@@ -126,7 +127,7 @@ class _VahedsState extends State<Vaheds> {
                     child: Column(
                       children: [
                         MyButton(
-                          text: 'اضافه کردن واحد',
+                          text: 'اضافه کردن گرماژ',
                           callback: () {
                             showModalBottomSheet(
                                 context: context,
@@ -151,24 +152,18 @@ class _VahedsState extends State<Vaheds> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 MyTextboxTitle(
-                                                    title: 'نام واحد',
+                                                    title: 'گرماژ',
                                                     isNumber: false,
                                                     isPrice: false,
                                                     lengthLimit: 0,
                                                     callback: (value) =>
-                                                        name = value),
+                                                        gram = value),
                                                 const SizedBox(
                                                   height: 20,
                                                 ),
                                                 SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width <
-                                                          600
-                                                      ? MediaQuery.of(context)
-                                                          .size
-                                                          .width
-                                                      : 600,
+                                                  width: MediaQuery.of(context).size.width < 600
+                                                      ? MediaQuery.of(context).size.width : 600,
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -193,8 +188,6 @@ class _VahedsState extends State<Vaheds> {
                                 });
                           },
                         ),
-                        // MyButton(
-                        //     text: 'اضافه کردن واحد', callback: onPressButton),
                         Expanded(
                           child: _loadedList.isNotEmpty
                               ? ListView.builder(
@@ -211,7 +204,6 @@ class _VahedsState extends State<Vaheds> {
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             alignment: Alignment.center,
-                                            // padding: const EdgeInsets.only(left: 20),
                                             onPrimary:
                                                 Theme.of(context).primaryColor,
                                             elevation: 4,
@@ -219,12 +211,11 @@ class _VahedsState extends State<Vaheds> {
                                           ),
                                           onPressed: () {
                                             id = _loadedList[ index]['id'];
-                                            name = _loadedList[ index]['name'];
+                                            gram = _loadedList[ index]['gram'];
                                             showModalBottomSheet(
                                                 context: context,
                                                 backgroundColor:
                                                     Colors.transparent,
-                                                // Add this line of Code
                                                 builder: (builder) {
                                                   return Container(
                                                     height: 350.0,
@@ -251,58 +242,27 @@ class _VahedsState extends State<Vaheds> {
                                                                       .center,
                                                               children: [
                                                                 MyTextboxTitle(
-                                                                    title:
-                                                                        'نام واحد',
-                                                                    isNumber:
-                                                                        false,
-                                                                    isPrice:
-                                                                        false,
-                                                                    lengthLimit:
-                                                                        0,
-                                                                    initialText:
-                                                                        _loadedList[index]
-                                                                            [
-                                                                            'name'],
-                                                                    callback:
-                                                                        (value) {
-                                                                      name =
-                                                                          value;
-
-                                                                      id = _loadedList[
-                                                                              index]
-                                                                          [
-                                                                          'id'];
-                                                                      print(
-                                                                          '$name - $id');
+                                                                    title: 'گرماژ',
+                                                                    isNumber:false,
+                                                                    isPrice:false,
+                                                                    lengthLimit:0,
+                                                                    initialText:_loadedList[index]['gram'],
+                                                                    callback:(value) { gram =value;
+                                                                      id = _loadedList[index]['id'];
                                                                     }),
                                                                 const SizedBox(
                                                                   height: 20,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width <
-                                                                          600
-                                                                      ? MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width
-                                                                      : 600,
+                                                                  width: MediaQuery.of(context).size.width < 600
+                                                                      ? MediaQuery.of(context).size.width : 600,
                                                                   child: Row(
                                                                     mainAxisAlignment:
                                                                         MainAxisAlignment
                                                                             .spaceAround,
                                                                     children: [
-                                                                      MyButton(
-                                                                          text:
-                                                                              'ذخیره',
-                                                                          callback:
-                                                                              onPressEdit),
-                                                                      MyButton(
-                                                                          text:
-                                                                              'حذف واحد',
-                                                                          callback:
-                                                                              onPressDelete),
+                                                                      MyButton(text:'ذخیره', callback:onPressEdit),
+                                                                      MyButton(text:'حذف گرماژ',callback:onPressDelete),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -318,18 +278,6 @@ class _VahedsState extends State<Vaheds> {
                                                   );
                                                 });
 
-                                            // Navigator.push(
-                                            //     context,
-                                            //     MaterialPageRoute(
-                                            //         builder: (context) =>
-                                            //             VahedEdit(
-                                            //                 name:
-                                            //                     _loadedList[index]
-                                            //                         ['name'],
-                                            //                 id: _loadedList[
-                                            //                         index]
-                                            //                     ['id']))).then(
-                                            //     (value) => _fetchVahed());
                                           },
                                           child: Row(
                                             mainAxisAlignment:
@@ -341,7 +289,7 @@ class _VahedsState extends State<Vaheds> {
                                                 size: 19,
                                               ),
                                               Text(
-                                                _loadedList[index]['name'],
+                                               "${_loadedList[index]['gram']} گرم",
                                                 style: const TextStyle(
                                                   color: Colors.black87,
                                                   fontFamily: 'IranYekan',
@@ -361,7 +309,7 @@ class _VahedsState extends State<Vaheds> {
                                   ),
                                 )
                               : const Text(
-                                  'واحدی یافت نشد',
+                                  'گرماژی یافت نشد',
                                   style: TextStyle(fontSize: 18),
                                 ),
                         )

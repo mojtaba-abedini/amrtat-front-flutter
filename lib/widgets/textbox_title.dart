@@ -12,7 +12,9 @@ class MyTextboxTitle extends StatefulWidget {
         required this.isNumber,
         required this.isPrice,
         required this.lengthLimit,
-        this.initialText
+        this.initialText,
+        this.widgetWidth
+
 
 
       })
@@ -24,6 +26,7 @@ class MyTextboxTitle extends StatefulWidget {
   final String title;
   final Function callback;
   final int lengthLimit;
+  double? widgetWidth;
 
 
   @override
@@ -47,9 +50,9 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
       child: Column(
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width < 600
+            width: widget.widgetWidth ?? (MediaQuery.of(context).size.width < 600
                 ? MediaQuery.of(context).size.width
-                : 600,
+                : 600),
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -63,9 +66,9 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
           ),
           Center(
             child: SizedBox(
-              width: MediaQuery.of(context).size.width < 600
+              width: widget.widgetWidth ?? (MediaQuery.of(context).size.width < 600
                   ? MediaQuery.of(context).size.width
-                  : 600,
+                  : 600),
               height: 50,
               child: Material(
                 elevation: 3,

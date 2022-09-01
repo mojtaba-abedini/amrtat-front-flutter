@@ -1,6 +1,10 @@
 import 'package:amertat/pages/base_information/banks.dart';
+import 'package:amertat/pages/base_information/grams.dart';
+import 'package:amertat/pages/base_information/jens.dart';
 import 'package:amertat/pages/base_information/paper_price.dart';
+import 'package:amertat/pages/base_information/shit_size.dart';
 import 'package:amertat/pages/base_information/stores.dart';
+
 import 'package:amertat/pages/base_information/vaheds.dart';
 
 import 'package:flutter/material.dart';
@@ -41,6 +45,24 @@ class _BaseInformationState extends State<BaseInformation> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const ServicesPrice()))),
+            MyButton(
+                text: 'جنس کاغذ',
+                callback: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Jens()))),
+            MyButton(
+                text: 'اندازه شیت',
+                callback: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ShitSize()))),
+            MyButton(
+                text: 'گرماژ',
+                callback: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Grams()))),
             MyButton(
                 text: 'انبارها',
                 callback: () => Navigator.push(

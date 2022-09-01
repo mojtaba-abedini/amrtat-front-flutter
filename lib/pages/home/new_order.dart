@@ -28,10 +28,13 @@ class _NewOrderState extends State<NewOrder> {
   List _loadedSize = [];
   List _loadedBank = [];
   List _filteredLoadedSize = [];
+  static const jensApiUrl = JensApi;
+  static const sizeApiUrl = SizeApi;
+  static const bankApiUrl = BankApi;
+
 
   Future<void> _fetchJens() async {
-    const apiUrl = getAllJens;
-    final response = await http.get(Uri.parse(apiUrl));
+     final response = await http.get(Uri.parse(jensApiUrl));
     final data = json.decode(response.body);
     setState(() {
       _loadedJens = data['data'];
@@ -39,8 +42,7 @@ class _NewOrderState extends State<NewOrder> {
   }
 
   Future<void> _fetchSize() async {
-    const apiUrl = getAllSize;
-    final response = await http.get(Uri.parse(apiUrl));
+    final response = await http.get(Uri.parse(sizeApiUrl));
     final data = json.decode(response.body);
     setState(() {
       _loadedSize = data['data'];
@@ -50,8 +52,7 @@ class _NewOrderState extends State<NewOrder> {
   }
 
   Future<void> _fetchBank() async {
-    const apiUrl = getAllBank;
-    final response = await http.get(Uri.parse(apiUrl));
+    final response = await http.get(Uri.parse(bankApiUrl));
     final data = json.decode(response.body);
     setState(() {
       _loadedBank = data['data'];
@@ -285,26 +286,6 @@ class _NewOrderState extends State<NewOrder> {
                       ),
                     ),
 
-                    // MyDropDown(
-                    //     title: 'نوع سفارش',
-                    //     initIndex: () => _loadedJens[0]['name'],
-                    //     initStateIndex: () =>
-                    //         newOrderType = _loadedJens[0]['name'],
-                    //     mapVariabale: _loadedJens,
-                    //     mapFeild: 'name',
-                    //     callback: (value) {
-                    //       newOrderType = value;
-                    //       getIdByName(value);
-                    //
-                    //     }),
-                    // MyDropDown(
-                    //     title: 'سایز محصول',
-                    //     initIndex: () => _filteredLoadedSize[0]['name'],
-                    //     initStateIndex: () =>
-                    //         newOrderSize = _filteredLoadedSize[0]['name'],
-                    //     mapVariabale: _filteredLoadedSize,
-                    //     mapFeild: 'name',
-                    //     callback: (value) => newOrderSize = value),
                     const SizedBox(
                       height: 20,
                     ),
