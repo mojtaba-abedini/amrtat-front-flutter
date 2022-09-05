@@ -13,7 +13,7 @@ class MyButton extends StatelessWidget {
       children: [
 
         SizedBox(
-          width: 200,
+          width: 180,
           height: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(

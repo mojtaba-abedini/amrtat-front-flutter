@@ -144,7 +144,7 @@ class _PaperPriceState extends State<PaperPrice> {
                                 // Add this line of Code
                                 builder: (builder) {
                                   return Container(
-                                    height: 400.0,
+                                    height: 350.0,
                                     color: Colors.transparent,
                                     child: Container(
                                       decoration: const BoxDecoration(

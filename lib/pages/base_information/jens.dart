@@ -135,7 +135,7 @@ class _JensState extends State<Jens> {
                                 // Add this line of Code
                                 builder: (builder) {
                                   return Container(
-                                    height: 350.0,
+                                    height: 300.0,
                                     color: Colors.transparent,
                                     child: Container(
                                       decoration: const BoxDecoration(

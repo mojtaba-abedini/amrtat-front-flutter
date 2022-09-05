@@ -33,14 +33,19 @@ class _ShitSizeState extends State<ShitSize> {
       _loadedList = data['data'];
     });
     _isLoading = false;
+
+
+
   }
 
 
   void onPressAdd() async {
+
     setState(() {
       _isLoading = true;
     });
     Navigator.pop(context, true);
+
     http.Response response = await create(name,tool,arz);
     print(response.body);
 
@@ -48,6 +53,7 @@ class _ShitSizeState extends State<ShitSize> {
   }
 
   void onPressEdit() async {
+    print('$name,$tool,$arz');
     setState(() {
       _isLoading = true;
     });
@@ -73,7 +79,7 @@ class _ShitSizeState extends State<ShitSize> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, dynamic>{
+      body: jsonEncode(<String,dynamic>{
         'name': name,
         'tool': tool,
         'arz': arz,
@@ -96,7 +102,7 @@ class _ShitSizeState extends State<ShitSize> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, dynamic>{
+      body: jsonEncode({
         'name': name,
         'tool': tool,
         'arz': arz,
@@ -115,7 +121,7 @@ class _ShitSizeState extends State<ShitSize> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('انبار ها'),
+        title: const Text('سایز شیت ها'),
         centerTitle: true,
         toolbarHeight: 75,
       ),
@@ -142,7 +148,7 @@ class _ShitSizeState extends State<ShitSize> {
                                 // Add this line of Code
                                 builder: (builder) {
                                   return Container(
-                                    height: 400.0,
+                                    height: 350.0,
                                     color: Colors.transparent,
                                     child: Container(
                                       decoration: const BoxDecoration(
@@ -170,24 +176,22 @@ class _ShitSizeState extends State<ShitSize> {
                                                   ? MediaQuery.of(context).size.width : 600,
                                               child: Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
+                                                MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   MyTextboxTitle(
-                                                      widgetWidth: 200,
+                                                     widgetWidth: MediaQuery.of(context).size.width < 600 ? MediaQuery.of(context).size.width /2.5 : 260,
                                                       title: 'طول',
                                                       isNumber: true,
                                                       isPrice: false,
                                                       lengthLimit: 0,
-                                                      callback: (value) =>
-                                                      tool = value),
+                                                      callback: (value) =>tool = int.parse(value)),
                                                   MyTextboxTitle(
-                                                      widgetWidth: 200,
+                                                     widgetWidth: MediaQuery.of(context).size.width < 600 ? MediaQuery.of(context).size.width /2.5 : 260,
                                                       title: 'عرض',
                                                       isNumber: true,
                                                       isPrice: false,
                                                       lengthLimit: 0,
-                                                      callback: (value) =>
-                                                      arz = value),
+                                                      callback: (value) =>arz = int.parse(value)),
                                                 ],
                                               ),
                                             ),
@@ -242,8 +246,8 @@ class _ShitSizeState extends State<ShitSize> {
                                           onPressed: () {
                                             id = _loadedList[ index]['id'];
                                             name= _loadedList[ index]['name'];
-                                            tool = _loadedList[ index]['tool'];
-                                            arz = _loadedList[ index]['arz'];
+                                            tool = _loadedList[ index]['tool'] ?? 0 ;
+                                            arz = _loadedList[ index]['arz'] ?? 0 ;
                                             showModalBottomSheet(
                                                 context: context,
                                                 backgroundColor:
@@ -291,24 +295,24 @@ class _ShitSizeState extends State<ShitSize> {
                                                         MainAxisAlignment.spaceAround,
                                                                    children: [
                                                                    MyTextboxTitle(
-                                                                     widgetWidth: 200,
+                                                                       widgetWidth: MediaQuery.of(context).size.width < 600 ? MediaQuery.of(context).size.width /2.5 : 260,
                                                                        title: 'طول',
                                                                        isNumber:true,
                                                                        isPrice:false,
                                                                        lengthLimit:0,
-                                                                       initialText:_loadedList[index]['tool'],
-                                                                       callback:(value) { tool =value;
+                                                                       initialText:_loadedList[index]['tool'].toString(),
+                                                                       callback:(value) { tool =int.parse(value);
                                                                        id = _loadedList[index]['id'];
 
                                                                        }),
                                                                    MyTextboxTitle(
-                                                                       widgetWidth: 200,
+                                                                       widgetWidth: MediaQuery.of(context).size.width < 600 ? MediaQuery.of(context).size.width /2.5 : 260,
                                                                        title: 'عرض',
                                                                        isNumber:true,
                                                                        isPrice:false,
                                                                        lengthLimit:0,
-                                                                       initialText:_loadedList[index]['arz'],
-                                                                       callback:(value) { arz =value;
+                                                                       initialText:_loadedList[index]['arz'].toString(),
+                                                                       callback:(value) { arz =int.parse(value);
                                                                        id = _loadedList[index]['id'];
 
                                                                        }),
@@ -326,7 +330,7 @@ class _ShitSizeState extends State<ShitSize> {
                                                                             .spaceAround,
                                                                     children: [
                                                                       MyButton(text:'ذخیره', callback:onPressEdit),
-                                                                      MyButton(text:'حذف ساز',callback:onPressDelete),
+                                                                      MyButton(text:'حذف سایز',callback:onPressDelete),
                                                                     ],
                                                                   ),
                                                                 ),

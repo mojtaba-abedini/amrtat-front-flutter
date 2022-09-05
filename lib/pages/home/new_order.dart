@@ -372,29 +372,3 @@ class _NewOrderState extends State<NewOrder> {
   }
 }
 
-// class Network {
-//   final String url;
-//   Network(this.url);
-//
-//   Future fetchData() async {
-//     Response response = await get(Uri.encodeFull())
-//   }
-//
-// }
-
-class Album {
-  final int id;
-  final String name;
-
-  const Album({
-    required this.id,
-    required this.name,
-  });
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      id: json['id'],
-      name: json['name'],
-    );
-  }
-}
