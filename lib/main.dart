@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'آمرتات بگ',
       theme: ThemeData(
         fontFamily: 'IranYekan',
-        primarySwatch: Colors.pink,
+        primarySwatch: Colors.green,
       ),
       home: const MyHomePage(title: 'آمرتات بگ'),
     );

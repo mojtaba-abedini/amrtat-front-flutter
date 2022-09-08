@@ -18,4 +18,8 @@ const GramApi = '${baseUrl}/gram';
 
 const PaperPriceApi = '${baseUrl}/paperprice';
 
-const ShitSizeApi= '${baseUrl}/shitsize';
+const ShitSizeApi= '${baseUrl}/shits';
+
+const ServicePriceApi= '${baseUrl}/service';
+
+const KarbariApi= '${baseUrl}/karbari';

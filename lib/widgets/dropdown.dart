@@ -92,6 +92,7 @@ class _MyDropDownState extends State<MyDropDown> {
                     onChanged: (String? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
+                        widget.callback(newValue);
                       });
 
                       // setState(() {

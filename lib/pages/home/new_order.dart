@@ -20,25 +20,38 @@ class NewOrder extends StatefulWidget {
 }
 
 class _NewOrderState extends State<NewOrder> {
-
   bool _isLoading = true;
   late String _selectedJens = _loadedJens[0]['name'] as String;
+  late String _selectedKarbari = _loadedKarbari[0]['name'] as String;
   String _selectedSize = "";
+  late int jens_id;
+  late int karbari_id;
   List _loadedJens = [];
   List _loadedSize = [];
+  List _loadedKarbari = [];
   List _loadedBank = [];
   List _filteredLoadedSize = [];
+  List _filteredLoadedKarbari = [];
   static const jensApiUrl = JensApi;
+  static const karbariApiUrl = KarbariApi;
   static const sizeApiUrl = SizeApi;
   static const bankApiUrl = BankApi;
 
-
   Future<void> _fetchJens() async {
-     final response = await http.get(Uri.parse(jensApiUrl));
+    final response = await http.get(Uri.parse(jensApiUrl));
     final data = json.decode(response.body);
     setState(() {
       _loadedJens = data['data'];
     });
+  }
+
+  Future<void> _fetchKarbari() async {
+    final response = await http.get(Uri.parse(karbariApiUrl));
+    final data = json.decode(response.body);
+    setState(() {
+      _loadedKarbari = data['data'];
+    });
+    filterKarbari(_loadedJens[0]['id']);
   }
 
   Future<void> _fetchSize() async {
@@ -47,7 +60,7 @@ class _NewOrderState extends State<NewOrder> {
     setState(() {
       _loadedSize = data['data'];
     });
-    filterSizes(_loadedJens[0]['id']);
+    filterSizes(_loadedKarbari[0]['id']);
     _isLoading = false;
   }
 
@@ -57,13 +70,13 @@ class _NewOrderState extends State<NewOrder> {
     setState(() {
       _loadedBank = data['data'];
     });
-
   }
 
   @override
   void initState() {
     super.initState();
     _fetchJens();
+    _fetchKarbari();
     _fetchBank();
     _fetchSize();
   }
@@ -72,9 +85,9 @@ class _NewOrderState extends State<NewOrder> {
     Navigator.pop(context);
   }
 
-  filterSizes(int id) {
+  filterSizes(int karbari_id) {
     _filteredLoadedSize =
-        _loadedSize.where((o) => o['karbari_id'] == id).toList();
+        _loadedSize.where((o) => (o['karbari_id'] == karbari_id)).toList();
 
     setState(() {
       _selectedSize = _filteredLoadedSize[0]['name'];
@@ -82,11 +95,29 @@ class _NewOrderState extends State<NewOrder> {
     });
   }
 
-  getIdByName(String value) {
-    final foundSelected =
-        _loadedJens.singleWhere((element) => element['name'] == value);
-    filterSizes(foundSelected['id']);
+  filterKarbari(int jens_id) {
+    _filteredLoadedKarbari =
+        _loadedKarbari.where((o) => o['jens_id'] == jens_id).toList();
 
+    setState(() {
+      _selectedKarbari = _filteredLoadedKarbari[0]['name'];
+      _filteredLoadedKarbari;
+    });
+  }
+
+  int getJensIdByName(String value) {
+    final foundedJens =
+        _loadedJens.singleWhere((element) => element['name'] == value);
+    jens_id = foundedJens['id'];
+    print(jens_id);
+    return jens_id;
+  }
+
+  int getKarbariIdByName(String value) {
+    final foundedKarbari =
+        _loadedKarbari.singleWhere((element) => element['name'] == value);
+    karbari_id = foundedKarbari['id'];
+    return karbari_id;
   }
 
   @override
@@ -118,7 +149,6 @@ class _NewOrderState extends State<NewOrder> {
                         isPrice: false,
                         lengthLimit: 10,
                         callback: (value) => newOrderPhone = value),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: SizedBox(
@@ -130,7 +160,7 @@ class _NewOrderState extends State<NewOrder> {
                             const Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                'نوع سفارش',
+                                'جنس سفارش',
                                 style: TextStyle(
                                     color: Colors.black87, fontSize: 17),
                               ),
@@ -166,7 +196,10 @@ class _NewOrderState extends State<NewOrder> {
                                   textDirection: TextDirection.rtl,
                                   child: DropdownButton<String>(
                                     onChanged: (newValue) {
-                                      getIdByName(newValue!);
+                                      getJensIdByName(newValue!);
+                                      filterKarbari(jens_id);
+                                      filterSizes(
+                                          _filteredLoadedKarbari[0]['id']);
                                       setState(() {
                                         _selectedJens = newValue;
                                       });
@@ -181,6 +214,92 @@ class _NewOrderState extends State<NewOrder> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                     items: _loadedJens.map((value) {
+                                      return DropdownMenuItem<String>(
+                                        alignment: Alignment.center,
+                                        value: value['name'],
+                                        child: Text(
+                                          value['name'],
+                                          style: const TextStyle(
+                                              fontFamily: 'IranYekan',
+                                              fontSize: 17),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    underline: Container(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width < 600
+                            ? MediaQuery.of(context).size.width
+                            : 600,
+                        child: Column(
+                          children: [
+                            const Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'کاربری',
+                                style: TextStyle(
+                                    color: Colors.black87, fontSize: 17),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Center(
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 5),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 2, horizontal: 20),
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 3,
+                                        offset: const Offset(
+                                            0, 2), // changes position of shadow
+                                      ),
+                                    ],
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5)),
+                                width: MediaQuery.of(context).size.width < 600
+                                    ? MediaQuery.of(context).size.width
+                                    : 600,
+                                child: Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: DropdownButton<String>(
+                                    onChanged: (newValue) {
+                                      getKarbariIdByName(newValue!);
+                                      filterSizes(karbari_id);
+                                      setState(() {
+                                        _selectedKarbari = newValue;
+                                      });
+                                    },
+                                    icon: const Visibility(
+                                        visible: false,
+                                        child: Icon(Icons.arrow_downward)),
+                                    value: _selectedKarbari,
+                                    elevation: 16,
+                                    iconSize: 0,
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                    items: _filteredLoadedKarbari.map((value) {
                                       return DropdownMenuItem<String>(
                                         alignment: Alignment.center,
                                         value: value['name'],
@@ -285,7 +404,6 @@ class _NewOrderState extends State<NewOrder> {
                         ),
                       ),
                     ),
-
                     const SizedBox(
                       height: 20,
                     ),
@@ -371,4 +489,3 @@ class _NewOrderState extends State<NewOrder> {
               )));
   }
 }
-
