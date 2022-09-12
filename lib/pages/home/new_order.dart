@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:amertat/api.dart';
 import 'package:amertat/widgets/button.dart';
-import 'package:amertat/widgets/dropdown.dart';
+
 import 'package:flutter/material.dart';
 import 'package:amertat/store.dart';
 import '../../widgets/date_picker.dart';
+import '../../widgets/my_widget.dart';
 import '../../widgets/textbox_title.dart';
 
 import 'package:http/http.dart' as http;
@@ -21,17 +22,24 @@ class NewOrder extends StatefulWidget {
 
 class _NewOrderState extends State<NewOrder> {
   bool _isLoading = true;
-  late String _selectedJens = _loadedJens[0]['name'] as String;
-  late String _selectedKarbari = _loadedKarbari[0]['name'] as String;
-  String _selectedSize = "";
-  late int jens_id;
-  late int karbari_id;
+
+  String? _selefonId;
+  String? _talakoobId;
+  String? _uvId;
+  String? _letterPressId;
+  String? _sahafiId;
+  String? _selectedJensId;
+  String? _selectedKarbariId;
+  String? _selectedSizeId;
+  String? _selectedBankId;
+
   List _loadedJens = [];
   List _loadedSize = [];
   List _loadedKarbari = [];
   List _loadedBank = [];
-  List _filteredLoadedSize = [];
-  List _filteredLoadedKarbari = [];
+  List _filteredSize = [];
+  List _filteredKarbari = [];
+
   static const jensApiUrl = JensApi;
   static const karbariApiUrl = KarbariApi;
   static const sizeApiUrl = SizeApi;
@@ -51,7 +59,6 @@ class _NewOrderState extends State<NewOrder> {
     setState(() {
       _loadedKarbari = data['data'];
     });
-    filterKarbari(_loadedJens[0]['id']);
   }
 
   Future<void> _fetchSize() async {
@@ -60,7 +67,6 @@ class _NewOrderState extends State<NewOrder> {
     setState(() {
       _loadedSize = data['data'];
     });
-    filterSizes(_loadedKarbari[0]['id']);
     _isLoading = false;
   }
 
@@ -83,41 +89,6 @@ class _NewOrderState extends State<NewOrder> {
 
   void onPressButton() {
     Navigator.pop(context);
-  }
-
-  filterSizes(int karbari_id) {
-    _filteredLoadedSize =
-        _loadedSize.where((o) => (o['karbari_id'] == karbari_id)).toList();
-
-    setState(() {
-      _selectedSize = _filteredLoadedSize[0]['name'];
-      _filteredLoadedSize;
-    });
-  }
-
-  filterKarbari(int jens_id) {
-    _filteredLoadedKarbari =
-        _loadedKarbari.where((o) => o['jens_id'] == jens_id).toList();
-
-    setState(() {
-      _selectedKarbari = _filteredLoadedKarbari[0]['name'];
-      _filteredLoadedKarbari;
-    });
-  }
-
-  int getJensIdByName(String value) {
-    final foundedJens =
-        _loadedJens.singleWhere((element) => element['name'] == value);
-    jens_id = foundedJens['id'];
-    print(jens_id);
-    return jens_id;
-  }
-
-  int getKarbariIdByName(String value) {
-    final foundedKarbari =
-        _loadedKarbari.singleWhere((element) => element['name'] == value);
-    karbari_id = foundedKarbari['id'];
-    return karbari_id;
   }
 
   @override
@@ -149,310 +120,152 @@ class _NewOrderState extends State<NewOrder> {
                         isPrice: false,
                         lengthLimit: 10,
                         callback: (value) => newOrderPhone = value),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width < 600
-                            ? MediaQuery.of(context).size.width
-                            : 600,
-                        child: Column(
-                          children: [
-                            const Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'جنس سفارش',
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 17),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 5),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 20),
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: const Offset(
-                                            0, 2), // changes position of shadow
-                                      ),
-                                    ],
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(5)),
-                                width: MediaQuery.of(context).size.width < 600
-                                    ? MediaQuery.of(context).size.width
-                                    : 600,
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: DropdownButton<String>(
-                                    onChanged: (newValue) {
-                                      getJensIdByName(newValue!);
-                                      filterKarbari(jens_id);
-                                      filterSizes(
-                                          _filteredLoadedKarbari[0]['id']);
-                                      setState(() {
-                                        _selectedJens = newValue;
-                                      });
-                                    },
-                                    icon: const Visibility(
-                                        visible: false,
-                                        child: Icon(Icons.arrow_downward)),
-                                    value: _selectedJens,
-                                    elevation: 16,
-                                    iconSize: 0,
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    items: _loadedJens.map((value) {
-                                      return DropdownMenuItem<String>(
-                                        alignment: Alignment.center,
-                                        value: value['name'],
-                                        child: Text(
-                                          value['name'],
-                                          style: const TextStyle(
-                                              fontFamily: 'IranYekan',
-                                              fontSize: 17),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    underline: Container(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width < 600
-                            ? MediaQuery.of(context).size.width
-                            : 600,
-                        child: Column(
-                          children: [
-                            const Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'کاربری',
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 17),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 5),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 20),
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: const Offset(
-                                            0, 2), // changes position of shadow
-                                      ),
-                                    ],
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(5)),
-                                width: MediaQuery.of(context).size.width < 600
-                                    ? MediaQuery.of(context).size.width
-                                    : 600,
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: DropdownButton<String>(
-                                    onChanged: (newValue) {
-                                      getKarbariIdByName(newValue!);
-                                      filterSizes(karbari_id);
-                                      setState(() {
-                                        _selectedKarbari = newValue;
-                                      });
-                                    },
-                                    icon: const Visibility(
-                                        visible: false,
-                                        child: Icon(Icons.arrow_downward)),
-                                    value: _selectedKarbari,
-                                    elevation: 16,
-                                    iconSize: 0,
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    items: _filteredLoadedKarbari.map((value) {
-                                      return DropdownMenuItem<String>(
-                                        alignment: Alignment.center,
-                                        value: value['name'],
-                                        child: Text(
-                                          value['name'],
-                                          style: const TextStyle(
-                                              fontFamily: 'IranYekan',
-                                              fontSize: 17),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    underline: Container(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width < 600
-                            ? MediaQuery.of(context).size.width
-                            : 600,
-                        child: Column(
-                          children: [
-                            const Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'سایز محصول',
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 17),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 5),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 20),
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5),
-                                        spreadRadius: 1,
-                                        blurRadius: 3,
-                                        offset: const Offset(
-                                            0, 2), // changes position of shadow
-                                      ),
-                                    ],
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.grey,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(5)),
-                                width: MediaQuery.of(context).size.width < 600
-                                    ? MediaQuery.of(context).size.width
-                                    : 600,
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: DropdownButton<String>(
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        _selectedSize = newValue!;
-                                      });
-                                    },
-                                    icon: const Visibility(
-                                        visible: false,
-                                        child: Icon(Icons.arrow_downward)),
-                                    value: _selectedSize,
-                                    elevation: 16,
-                                    iconSize: 0,
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    items: _filteredLoadedSize.map((value) {
-                                      return DropdownMenuItem<String>(
-                                        alignment: Alignment.center,
-                                        value: value['name'],
-                                        child: Text(
-                                          value['name'],
-                                          style: const TextStyle(
-                                              fontFamily: 'IranYekan',
-                                              fontSize: 17),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    underline: Container(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+
+                    //////////////////////////////////////// Jens Deopdown //////////////////////////////////////
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'جنس سفارش',
+                        "جنس را انتخاب کنید",
+                        _selectedJensId,
+                        _loadedJens, (onChangedVal) {
+                      setState(() {
+                        _selectedJensId = onChangedVal! ?? "";
+                        _selectedKarbariId = null;
+                        _selectedSizeId = null;
+                        _filteredKarbari = _loadedKarbari
+                            .where((element) =>
+                                element['jens_id'].toString() ==
+                                _selectedJensId.toString())
+                            .toList();
+                      });
+                    }, (onValidateVal) {
+                      if (onValidateVal == null) {
+                        return "جنس را انتخاب کنید";
+                      }
+                      return null;
+                    },
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        contentPadding: 10,
+                        optionValue: "id",
+                        optionLabel: "name"),
+                    //////////////////////////////////////// Jens Deopdown ///////////////////////////////////////
+
+                    ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'کاربری',
+                        "کاربری را انتخاب کنید",
+                        _selectedKarbariId,
+                        _filteredKarbari, (onChangedVal) {
+                      setState(() {
+                        _selectedKarbariId = onChangedVal;
+                        _selectedSizeId = null;
+                        _filteredSize = _loadedSize
+                            .where((element) =>
+                                element['karbari_id'].toString() ==
+                                _selectedKarbariId.toString())
+                            .toList();
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
+                    ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
+                    ////////////////////////////////////// Size Deopdown /////////////////////////////////////
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'سایز سفارش',
+                        "سایز را انتخاب کنید",
+                        _selectedSizeId,
+                        _filteredSize, (onChangedVal) {
+                      setState(() {
+                        _selectedSizeId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
+                    ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
+
                     MyTextboxTitle(
                         title: 'تعداد',
                         isNumber: true,
                         isPrice: false,
                         lengthLimit: 0,
                         callback: (value) => newOrderPrice = value),
-                    MyDropDown(
-                        title: 'سلفون',
-                        initIndex: () => orderAttribute[0]['name'],
-                        initStateIndex: () =>
-                            newOrderType = orderAttribute[0]['name'] as String,
-                        mapVariabale: orderAttribute,
-                        mapFeild: 'name',
-                        callback: (value) => selefon = value),
-                    MyDropDown(
-                        title: 'طلاکوب',
-                        initIndex: () => orderAttribute[0]['name'],
-                        initStateIndex: () =>
-                            newOrderType = orderAttribute[0]['name'] as String,
-                        mapVariabale: orderAttribute,
-                        mapFeild: 'name',
-                        callback: (value) => talakoob = value),
-                    MyDropDown(
-                        title: 'یووی و امباس',
-                        initIndex: () => orderAttribute[0]['name'],
-                        initStateIndex: () =>
-                            newOrderType = orderAttribute[0]['name'] as String,
-                        mapVariabale: orderAttribute,
-                        mapFeild: 'name',
-                        callback: (value) => UV = value),
-                    MyDropDown(
-                        title: 'لترپرس و خط تا برجسته',
-                        initIndex: () => orderAttribute[0]['name'],
-                        initStateIndex: () =>
-                            newOrderType = orderAttribute[0]['name'] as String,
-                        mapVariabale: orderAttribute,
-                        mapFeild: 'name',
-                        callback: (value) => letterPress = value),
-                    MyDropDown(
-                        title: 'صحافی و بسته بندی',
-                        initIndex: () => orderAttribute[0]['name'],
-                        initStateIndex: () =>
-                            newOrderType = orderAttribute[0]['name'] as String,
-                        mapVariabale: orderAttribute,
-                        mapFeild: 'name',
-                        callback: (value) => sahafi = value),
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'سلفون',
+                        "وضعیت سلفون را انتخاب کنید",
+                        _selefonId,
+                        orderAttribute, (onChangedVal) {
+                      setState(() {
+                        _selefonId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'طلاکوب',
+                        "وضعیت طلاکوب را انتخاب کنید",
+                        _talakoobId,
+                        orderAttribute, (onChangedVal) {
+                      setState(() {
+                        _talakoobId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'یووی و امباس',
+                        "وضعیت یووی را انتخاب کنید",
+                        _uvId,
+                        orderAttribute, (onChangedVal) {
+                      setState(() {
+                        _uvId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'لترپرس و خط تا برجسته',
+                        "وضعیت لترپرس را انتخاب کنید",
+                        _letterPressId,
+                        orderAttribute, (onChangedVal) {
+                      setState(() {
+                        _letterPressId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'صحافی و بسته بندی',
+                        "وضعیت لترپرس را انتخاب کنید",
+                        _sahafiId,
+                        orderAttribute, (onChangedVal) {
+                      setState(() {
+                        _sahafiId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
                     MyTextboxTitle(
                         title: 'مبلغ کل سفارش',
                         isNumber: true,
@@ -469,14 +282,22 @@ class _NewOrderState extends State<NewOrder> {
                         title: 'تاریخ واریز بیعانه',
                         callback: (jalaliDate, georgianDate) =>
                             newOrderFirstPriceDate = jalaliDate),
-                    MyDropDown(
-                        title: 'بانک واریز بیعانه',
-                        initIndex: () => _loadedBank[0]['name'],
-                        initStateIndex: () =>
-                            newOrderBank = _loadedBank[0]['name'] as String,
-                        mapVariabale: _loadedBank,
-                        mapFeild: 'name',
-                        callback: (value) => newOrderBank = value),
+                    ////////////////////////////////////// Size Deopdown /////////////////////////////////////
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'بانک واریز بیعانه',
+                        "بانک را انتخاب کنید",
+                        _selectedBankId,
+                        _loadedBank, (onChangedVal) {
+                      setState(() {
+                        _selectedBankId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
+                    ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
                     const SizedBox(
                       height: 20,
                     ),

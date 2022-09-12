@@ -1,11 +1,12 @@
 import 'dart:convert';
-import 'package:amertat/widgets/dropdown.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../../api.dart';
 import '../../widgets/button.dart';
+import '../../widgets/my_widget.dart';
 import '../../widgets/textbox_title.dart';
 
 class Karbari extends StatefulWidget {
@@ -17,22 +18,16 @@ class Karbari extends StatefulWidget {
 
 class _KarbariState extends State<Karbari> {
   bool _isLoading = true;
-  late String name;
+  String? name;
+  int? id;
+  String? _selectedJensId;
 
-  late int id;
-  late int jens_id;
   static const apiUrlKarbari = KarbariApi;
   static const apiUrlJens = JensApi;
 
-  List _loadedListKarbari = [];
-  List _loadedListJens = [];
+  List _loadedKarbari = [];
+  List _loadedJens = [];
 
-  int getIdByName(String value) {
-    final foundSelected =
-        _loadedListJens.singleWhere((element) => element['name'] == value);
-    jens_id = foundSelected['id'];
-    return jens_id;
-  }
 
   Future<void> _fetch() async {
     final responseKarbari = await http.get(Uri.parse(apiUrlKarbari));
@@ -41,8 +36,8 @@ class _KarbariState extends State<Karbari> {
     final responseJens = await http.get(Uri.parse(apiUrlJens));
     final dataJens = json.decode(responseJens.body);
     setState(() {
-      _loadedListKarbari = dataKarbari['data'];
-      _loadedListJens = dataJens['data'];
+      _loadedKarbari = dataKarbari['data'];
+      _loadedJens = dataJens['data'];
     });
     _isLoading = false;
   }
@@ -53,7 +48,7 @@ class _KarbariState extends State<Karbari> {
     });
     Navigator.pop(context, true);
 
-    http.Response response = await create(jens_id, name);
+    http.Response response = await create(_selectedJensId!, name!);
     print(response.body);
 
     _fetch();
@@ -64,7 +59,7 @@ class _KarbariState extends State<Karbari> {
       _isLoading = true;
     });
     Navigator.pop(context);
-    http.Response response = await edit(jens_id, name);
+    http.Response response = await edit(_selectedJensId!, name!);
     print(response.body);
     _fetch();
   }
@@ -74,19 +69,19 @@ class _KarbariState extends State<Karbari> {
       _isLoading = true;
     });
     Navigator.pop(context);
-    http.Response response = await delete(id);
+    http.Response response = await delete(id!);
     print(response.body);
     _fetch();
   }
 
-  Future<http.Response> edit(int jens_id, String name) {
+  Future<http.Response> edit(String _selectedJensId, String name) {
     return http.put(
-      Uri.parse("$apiUrlKarbari/$id"),
+      Uri.parse("$apiUrlKarbari/$_selectedJensId"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'jens_id': jens_id,
+        'jens_id': int.parse(_selectedJensId),
         'name': name,
       }),
     );
@@ -101,14 +96,14 @@ class _KarbariState extends State<Karbari> {
     );
   }
 
-  Future<http.Response> create(int jens_id, String name) {
+  Future<http.Response> create(String _selectedJensId, String name) {
     return http.post(
       Uri.parse(apiUrlKarbari),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'jens_id': jens_id,
+        'jens_id': int.parse(_selectedJensId),
         'name': name,
       }),
     );
@@ -116,7 +111,7 @@ class _KarbariState extends State<Karbari> {
 
   String getJensNameById(int jens_id) {
     final foundedJens =
-    _loadedListJens.singleWhere((element) => element['id'] == jens_id);
+    _loadedJens.singleWhere((element) => element['id'] == jens_id);
      return foundedJens['name'];
   }
 
@@ -125,7 +120,7 @@ class _KarbariState extends State<Karbari> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    jens_id = 1;
+
     _fetch();
   }
 
@@ -176,17 +171,35 @@ class _KarbariState extends State<Karbari> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                MyDropDown(
-                                                    title: 'جنس',
-                                                    initIndex: () =>
-                                                        _loadedListJens[0]
-                                                            ['name'],
-                                                    initStateIndex: () {},
-                                                    mapVariabale:
-                                                        _loadedListJens,
-                                                    mapFeild: 'name',
-                                                    callback: (value) =>
-                                                        getIdByName(value)),
+
+                                                MyWidgets.dropDownWidget(
+                                                    context,
+                                                    'جنس',
+                                                    "کاربری را انتخاب کنید",
+                                                    _selectedJensId,
+                                                    _loadedJens,
+                                                        (onChangedVal) {
+                                                      setState(() {
+                                                        _selectedJensId =
+                                                            onChangedVal;
+                                                      });
+                                                    },
+                                                        (onValidateVal) =>
+                                                    null,
+                                                    borderFocusColor:
+                                                    Theme.of(
+                                                        context)
+                                                        .primaryColor,
+                                                    borderColor: Theme
+                                                        .of(
+                                                        context)
+                                                        .primaryColor,
+                                                    optionValue: "id",
+                                                    optionLabel:
+                                                    "name"),
+
+
+
                                                 MyTextboxTitle(
                                                     title: 'عنوان',
                                                     isNumber: false,
@@ -231,9 +244,9 @@ class _KarbariState extends State<Karbari> {
                           },
                         ),
                         Expanded(
-                          child: _loadedListKarbari.isNotEmpty
+                          child: _loadedKarbari.isNotEmpty
                               ? ListView.builder(
-                                  itemCount: _loadedListKarbari.length,
+                                  itemCount: _loadedKarbari.length,
                                   itemBuilder: (context, index) => Container(
                                     margin: const EdgeInsets.only(bottom: 20),
                                     child: SizedBox(
@@ -253,11 +266,11 @@ class _KarbariState extends State<Karbari> {
                                           ),
                                           onPressed: () {
                                             id =
-                                                _loadedListKarbari[index]['id'];
-                                            jens_id = _loadedListKarbari[index]
-                                                ['jens_id'];
+                                                _loadedKarbari[index]['id'];
+                                            _selectedJensId = _loadedKarbari[index]
+                                                ['jens_id'].toString();
 
-                                            name = _loadedListKarbari[index]
+                                            name = _loadedKarbari[index]
                                                 ['name'];
 
                                             showModalBottomSheet(
@@ -289,22 +302,32 @@ class _KarbariState extends State<Karbari> {
                                                                   MainAxisAlignment
                                                                       .center,
                                                               children: [
-                                                                MyDropDown(
-                                                                    title:
-                                                                        'جنس',
-                                                                    initIndex: () =>
-                                                                        _loadedListJens[jens_id - 1]
-                                                                            [
-                                                                            'name'],
-                                                                    initStateIndex:
-                                                                        () {},
-                                                                    mapVariabale:
-                                                                        _loadedListJens,
-                                                                    mapFeild:
-                                                                        'name',
-                                                                    callback: (value) =>
-                                                                        getIdByName(
-                                                                            value)),
+                                                                MyWidgets.dropDownWidget(
+                                                                    context,
+                                                                    'جنس',
+                                                                    "کاربری را انتخاب کنید",
+                                                                    _selectedJensId,
+                                                                    _loadedJens,
+                                                                        (onChangedVal) {
+                                                                      setState(() {
+                                                                        _selectedJensId =
+                                                                            onChangedVal;
+                                                                      });
+                                                                    },
+                                                                        (onValidateVal) =>
+                                                                    null,
+                                                                    borderFocusColor:
+                                                                    Theme.of(
+                                                                        context)
+                                                                        .primaryColor,
+                                                                    borderColor: Theme
+                                                                        .of(
+                                                                        context)
+                                                                        .primaryColor,
+                                                                    optionValue: "id",
+                                                                    optionLabel:
+                                                                    "name"),
+
                                                                 MyTextboxTitle(
                                                                     title:
                                                                         'عنوان',
@@ -315,15 +338,15 @@ class _KarbariState extends State<Karbari> {
                                                                     lengthLimit:
                                                                         0,
                                                                     initialText:
-                                                                        _loadedListKarbari[index]
+                                                                        _loadedKarbari[index]
                                                                             [
                                                                             'name'],
                                                                     callback:
                                                                         (value) {
                                                                       name =
                                                                           value;
-                                                                      jens_id =
-                                                                          _loadedListKarbari[index]
+                                                                      _selectedJensId =
+                                                                          _loadedKarbari[index]
                                                                               [
                                                                               'jens_id'];
                                                                     }),
@@ -379,7 +402,7 @@ class _KarbariState extends State<Karbari> {
                                                 color: Colors.black87,
                                                 size: 19,
                                               ),
-                                              Text('${getJensNameById(_loadedListKarbari[index]['jens_id'])} - ${_loadedListKarbari[index]['name']}',
+                                              Text('${getJensNameById(_loadedKarbari[index]['jens_id'])} - ${_loadedKarbari[index]['name']}',
                                                 style: const TextStyle(
                                                   color: Colors.black87,
                                                   fontFamily: 'IranYekan',

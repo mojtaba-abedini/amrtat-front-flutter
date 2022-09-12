@@ -120,8 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(16.0),
                     height: 200,
                     child: SizedBox(
-                      height: 130,
-                      child: SvgPicture.asset(logoFileName),
+
+                      child: SvgPicture.asset(logoFileName,width:130,height: 130,),
                     )),
               ),
               const Divider(

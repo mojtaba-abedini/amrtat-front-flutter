@@ -24,7 +24,7 @@ class MyTextboxTitle extends StatefulWidget {
   String? initialText;
   final bool isPrice;
   final String title;
-  final Function callback;
+  late Function callback;
   final int lengthLimit;
   double? widgetWidth;
 
@@ -69,9 +69,9 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
               width: widget.widgetWidth ?? (MediaQuery.of(context).size.width < 600
                   ? MediaQuery.of(context).size.width
                   : 600),
-              height: 50,
+              height: 45,
               child: Material(
-                elevation: 3,
+                // elevation: 3,
                 borderRadius: BorderRadius.circular(5),
                 child: TextField(
                   onChanged: (content) {
