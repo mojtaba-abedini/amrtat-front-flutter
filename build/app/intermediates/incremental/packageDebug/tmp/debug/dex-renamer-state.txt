@@ -1,4 +1,4 @@
-#Sun Sep 04 18:12:46 IRDT 2022
-base.0=C\:\\Users\\Mojtaba\\Desktop\\amertat\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+#Fri Sep 16 14:45:12 IRDT 2022
+base.0=D\:\\Projects\\amertat\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

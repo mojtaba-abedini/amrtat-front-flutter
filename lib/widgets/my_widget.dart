@@ -1,3 +1,4 @@
+import 'package:amertat/store.dart';
 import 'package:flutter/material.dart';
 
 class MyWidgets {
@@ -60,7 +61,7 @@ class MyWidgets {
                 alignment: Alignment.centerRight,
                 child: Text(
                   title,
-                  style: const TextStyle(color: Colors.black87, fontSize: 17),
+                  style: const TextStyle(color: Palette.mySecondColor, fontSize: 17),
                 ),
               ),
               const SizedBox(

@@ -1,25 +1,27 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../../api.dart';
 import '../../widgets/button.dart';
 import '../../widgets/textbox_title.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-class Grams extends StatefulWidget {
-  const Grams({Key? key}) : super(key: key);
+
+class TarafHesab extends StatefulWidget {
+  const TarafHesab({Key? key}) : super(key: key);
 
   @override
-  State<Grams> createState() => _GramsState();
+  State<TarafHesab> createState() => _TarafHesabState();
 }
 
-class _GramsState extends State<Grams> {
+class _TarafHesabState extends State<TarafHesab> {
 
   bool _isLoading = true;
-  late String gram;
+  late String name;
+  late String phone;
+  late String address;
   late int id;
-  static const apiUrl = GramApi;
+  static const apiUrl = TarafHesabApi;
+
   List _loadedList = [];
 
   Future<void> _fetch() async {
@@ -38,7 +40,7 @@ class _GramsState extends State<Grams> {
       _isLoading = true;
     });
     Navigator.pop(context, true);
-    http.Response response = await create(gram);
+    http.Response response = await create(name,phone,address);
     print(response.body);
 
     _fetch();
@@ -49,7 +51,7 @@ class _GramsState extends State<Grams> {
       _isLoading = true;
     });
     Navigator.pop(context);
-    http.Response response = await edit(gram, id);
+    http.Response response = await edit(name,phone, address, id);
     print(response.body);
     _fetch();
   }
@@ -64,14 +66,16 @@ class _GramsState extends State<Grams> {
     _fetch();
   }
 
-  Future<http.Response> edit(String gram, int id) {
+  Future<http.Response> edit(String name, String phone, String address, int id) {
     return http.put(
       Uri.parse("$apiUrl/$id"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'gram': gram,
+        'name': name,
+        'phone': phone,
+        'address': address,
       }),
     );
   }
@@ -85,14 +89,16 @@ class _GramsState extends State<Grams> {
     );
   }
 
-  Future<http.Response> create(String gram) {
+  Future<http.Response> create(String name,String phone, String address) {
     return http.post(
       Uri.parse(apiUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'gram': gram,
+        'name': name,
+        'phone': phone,
+        'address': address,
       }),
     );
   }
@@ -108,7 +114,7 @@ class _GramsState extends State<Grams> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('گرماژ'),
+        title: const Text('طرف حساب ها'),
         centerTitle: true,
         toolbarHeight: 75,
       ),
@@ -127,15 +133,18 @@ class _GramsState extends State<Grams> {
                     child: Column(
                       children: [
                         MyButton(
-                          text: 'اضافه کردن گرماژ',
+                          text: 'اضافه کردن طرف حساب',
                           callback: () {
+                            address="";
+                            phone = "";
                             showModalBottomSheet(
+                              isScrollControlled: true,
                                 context: context,
                                 backgroundColor: Colors.transparent,
                                 // Add this line of Code
                                 builder: (builder) {
                                   return Container(
-                                    height: 350.0,
+                                    height: kIsWeb ? 500 : MediaQuery.of(context).size.height,
                                     color: Colors.transparent,
                                     child: Container(
                                       decoration: const BoxDecoration(
@@ -148,16 +157,32 @@ class _GramsState extends State<Grams> {
                                           textDirection: TextDirection.rtl,
                                           child: Center(
                                             child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+
+
                                               children: [
+                                                const SizedBox(height: 40,),
+
                                                 MyTextboxTitle(
-                                                    title: 'گرماژ',
+                                                    title: 'نام طرف حساب',
                                                     isNumber: false,
                                                     isPrice: false,
                                                     lengthLimit: 0,
                                                     callback: (value) =>
-                                                        gram = value),
+                                                        name = value),
+                                                MyTextboxTitle(
+                                                    title: 'تلفن',
+                                                    isNumber: false,
+                                                    isPrice: false,
+                                                    lengthLimit: 0,
+                                                    callback: (value) =>
+                                                    phone = value),
+                                                MyTextboxTitle(
+                                                    title: 'آدرس',
+                                                    isNumber: false,
+                                                    isPrice: false,
+                                                    lengthLimit: 0,
+                                                    callback: (value) =>
+                                                    address = value),
                                                 const SizedBox(
                                                   height: 20,
                                                 ),
@@ -166,12 +191,9 @@ class _GramsState extends State<Grams> {
                                                       ? MediaQuery.of(context).size.width : 600,
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
+                                                        MainAxisAlignment.spaceAround,
                                                     children: [
-                                                      MyButton(
-                                                          text: 'ذخیره',
-                                                          callback: onPressAdd),
+                                                      MyButton(text: 'ذخیره',callback: onPressAdd),
                                                     ],
                                                   ),
                                                 ),
@@ -211,14 +233,17 @@ class _GramsState extends State<Grams> {
                                           ),
                                           onPressed: () {
                                             id = _loadedList[ index]['id'];
-                                            gram = _loadedList[ index]['gram'];
+                                            name= _loadedList[ index]['name'];
+                                            _loadedList[ index]['phone'] == null ? phone= "" : phone= _loadedList[ index]['phone'];
+                                            _loadedList[ index]['address'] == null ? address= "" : address= _loadedList[ index]['address'];
                                             showModalBottomSheet(
+                                              isScrollControlled: true,
                                                 context: context,
                                                 backgroundColor:
                                                     Colors.transparent,
                                                 builder: (builder) {
                                                   return Container(
-                                                    height: 350.0,
+                                                    height: kIsWeb ? 500 : MediaQuery.of(context).size.height,
                                                     color: Colors.transparent,
                                                     child: Container(
                                                       decoration: const BoxDecoration(
@@ -237,18 +262,38 @@ class _GramsState extends State<Grams> {
                                                               TextDirection.rtl,
                                                           child: Center(
                                                             child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
+
                                                               children: [
+                                                              const SizedBox(height: 40,),
                                                                 MyTextboxTitle(
-                                                                    title: 'گرماژ',
+                                                                    title: 'نام طرف حساب',
                                                                     isNumber:false,
                                                                     isPrice:false,
                                                                     lengthLimit:0,
-                                                                    initialText:_loadedList[index]['gram'],
-                                                                    callback:(value) { gram =value;
-                                                                      id = _loadedList[index]['id'];
+                                                                    initialText:_loadedList[index]['name'],
+                                                                    callback:(value) { name =value;
+
+
+                                                                    }),
+                                                                MyTextboxTitle(
+                                                                    title: 'تلفن',
+                                                                    isNumber:false,
+                                                                    isPrice:false,
+                                                                    lengthLimit:0,
+                                                                    initialText:_loadedList[index]['phone'],
+                                                                    callback:(value) { phone =value;
+
+
+                                                                    }),
+                                                                MyTextboxTitle(
+                                                                    title: 'آدرس',
+                                                                    isNumber:false,
+                                                                    isPrice:false,
+                                                                    lengthLimit:0,
+                                                                    initialText:_loadedList[index]['address'],
+                                                                    callback:(value) { address =value;
+
+
                                                                     }),
                                                                 const SizedBox(
                                                                   height: 20,
@@ -261,8 +306,10 @@ class _GramsState extends State<Grams> {
                                                                         MainAxisAlignment
                                                                             .spaceAround,
                                                                     children: [
+
                                                                       MyButton(text:'ذخیره', callback:onPressEdit),
-                                                                      MyButton(text:'حذف گرماژ',callback:onPressDelete),
+                                                                      MyButton(text:'حذف طرف حساب',callback:onPressDelete),
+
                                                                     ],
                                                                   ),
                                                                 ),
@@ -284,12 +331,12 @@ class _GramsState extends State<Grams> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               const Icon(
-                                                Icons.assignment_turned_in,
+                                                Icons.store,
                                                 color: Colors.black87,
                                                 size: 19,
                                               ),
                                               Text(
-                                               "${_loadedList[index]['gram']} گرم",
+                                                _loadedList[index]['name'],
                                                 style: const TextStyle(
                                                   color: Colors.black87,
                                                   fontFamily: 'IranYekan',
@@ -309,7 +356,7 @@ class _GramsState extends State<Grams> {
                                   ),
                                 )
                               : const Text(
-                                  'گرماژی یافت نشد',
+                                  'انباری یافت نشد',
                                   style: TextStyle(fontSize: 18),
                                 ),
                         )

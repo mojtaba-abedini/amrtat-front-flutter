@@ -23,3 +23,5 @@ const ShitSizeApi= '${baseUrl}/shits';
 const ServicePriceApi= '${baseUrl}/service';
 
 const KarbariApi= '${baseUrl}/karbari';
+
+const TarafHesabApi= '${baseUrl}/tarafhesab';

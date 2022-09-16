@@ -1,3 +1,5 @@
+import 'package:amertat/store.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -57,7 +59,7 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
               alignment: Alignment.centerRight,
               child: Text(
                 widget.title,
-                style: const TextStyle(color: Colors.black87, fontSize: 17),
+                style: const TextStyle(color: Palette.mySecondColor, fontSize: 17),
               ),
             ),
           ),
@@ -73,51 +75,54 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
               child: Material(
                 // elevation: 3,
                 borderRadius: BorderRadius.circular(5),
-                child: TextField(
-                  onChanged: (content) {
-                    widget.callback(content);
-                  },
-                  controller: textboxValue,
-                  autofocus: true,
-                  cursorColor: Colors.grey,
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                  decoration: InputDecoration(
-                    contentPadding: kIsWeb
-                        ? const EdgeInsets.all(15)
-                        : const EdgeInsets.all(13),
-                    filled: true,
-                    fillColor: Colors.white70,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                      const BorderSide(width: 0.9, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5),
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextField(
+                    onChanged: (content) {
+                      widget.callback(content);
+                    },
+                    controller: textboxValue,
+                    // autofocus: true,
+                    cursorColor: Colors.grey,
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                      contentPadding: kIsWeb
+                          ? const EdgeInsets.all(15)
+                          : const EdgeInsets.all(13),
+                      filled: true,
+                      fillColor: Colors.white70,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                        const BorderSide(width: 0.9, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 0.9, color: Theme.of(context).primaryColor),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          width: 0.9, color: Theme.of(context).primaryColor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
+                    keyboardType: widget.isNumber ? TextInputType.number : null,
+                    inputFormatters: widget.lengthLimit == 0 && widget.isPrice == false
+                        ? null
+                        : (widget.lengthLimit == 0 && widget.isPrice == true
+                        ? <TextInputFormatter>[
+                      ThousandsSeparatorInputFormatter(),
+                    ]
+                        : ((widget.lengthLimit != 0 && widget.isPrice == true
+                        ? <TextInputFormatter>[
+                      LengthLimitingTextInputFormatter(widget.lengthLimit),
+                      ThousandsSeparatorInputFormatter(),
+                    ]
+                        : ((widget.lengthLimit != 0 && widget.isPrice == false
+                        ? <TextInputFormatter>[
+                      LengthLimitingTextInputFormatter(
+                          widget.lengthLimit)
+                    ]
+                        : null))))),
                   ),
-                  keyboardType: widget.isNumber ? TextInputType.number : null,
-                  inputFormatters: widget.lengthLimit == 0 && widget.isPrice == false
-                      ? null
-                      : (widget.lengthLimit == 0 && widget.isPrice == true
-                      ? <TextInputFormatter>[
-                    ThousandsSeparatorInputFormatter(),
-                  ]
-                      : ((widget.lengthLimit != 0 && widget.isPrice == true
-                      ? <TextInputFormatter>[
-                    LengthLimitingTextInputFormatter(widget.lengthLimit),
-                    ThousandsSeparatorInputFormatter(),
-                  ]
-                      : ((widget.lengthLimit != 0 && widget.isPrice == false
-                      ? <TextInputFormatter>[
-                    LengthLimitingTextInputFormatter(
-                        widget.lengthLimit)
-                  ]
-                      : null))))),
                 ),
               ),
             ),

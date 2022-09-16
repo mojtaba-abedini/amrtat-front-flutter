@@ -5,8 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../../api.dart';
+import '../../store.dart';
 import '../../widgets/button.dart';
 import '../../widgets/textbox_title.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Size extends StatefulWidget {
   const Size({Key? key}) : super(key: key);
@@ -20,6 +22,8 @@ class _SizeState extends State<Size> {
   late String name;
 
   late int id;
+  late int paperTool;
+  late int paperArz;
   late int jens_id;
   late int karbari_id;
 
@@ -60,7 +64,8 @@ class _SizeState extends State<Size> {
     });
     Navigator.pop(context, true);
 
-    http.Response response = await create(_selectedJensId!, name);
+    http.Response response = await create(
+        _selectedJensId!, _selectedKarbariId!, name, paperTool, paperArz);
     print(response.body);
 
     _fetch();
@@ -71,7 +76,8 @@ class _SizeState extends State<Size> {
       _isLoading = true;
     });
     Navigator.pop(context);
-    http.Response response = await edit(jens_id, name);
+    http.Response response = await edit(
+        id, _selectedJensId!, _selectedKarbariId!, name, paperTool, paperArz);
     print(response.body);
     _fetch();
   }
@@ -86,15 +92,19 @@ class _SizeState extends State<Size> {
     _fetch();
   }
 
-  Future<http.Response> edit(int jens_id, String name) {
+  Future<http.Response> edit(int id, String jens_id, String karbari_id,
+      String name, int paperTool, int paperArz) {
     return http.put(
       Uri.parse("$apiUrlSize/$id"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'jens_id': jens_id,
+        'jens_id': int.parse(jens_id),
+        'karbari_id': int.parse(karbari_id),
         'name': name,
+        'paperTool': paperTool,
+        'paperArz': paperArz,
       }),
     );
   }
@@ -108,15 +118,19 @@ class _SizeState extends State<Size> {
     );
   }
 
-  Future<http.Response> create(String _selectedJensId, String name) {
+  Future<http.Response> create(String jens_id, String karbari_id, String name,
+      int paperTool, int paperArz) {
     return http.post(
       Uri.parse(apiUrlSize),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'jens_id': int.parse(_selectedJensId),
+        'jens_id': int.parse(jens_id),
+        'karbari_id': int.parse(karbari_id),
         'name': name,
+        'paperTool': paperTool,
+        'paperArz': paperArz,
       }),
     );
   }
@@ -124,6 +138,12 @@ class _SizeState extends State<Size> {
   String getJensNameById(int jens_id) {
     final foundedJens =
         _loadedJens.singleWhere((element) => element['id'] == jens_id);
+    return foundedJens['name'];
+  }
+
+  String getKarbariNameById(int karbari_id) {
+    final foundedJens =
+        _loadedKarbari.singleWhere((element) => element['id'] == karbari_id);
     return foundedJens['name'];
   }
 
@@ -138,6 +158,7 @@ class _SizeState extends State<Size> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: thirdColor,
       appBar: AppBar(
         title: const Text('سایز محصولات'),
         centerTitle: true,
@@ -154,13 +175,14 @@ class _SizeState extends State<Size> {
                   textDirection: TextDirection.rtl,
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        top: 30, bottom: 30, right: 20, left: 20),
+                        top: 30, bottom: 30, right: 30, left: 30),
                     child: Column(
                       children: [
                         MyButton(
                           text: 'اضافه کردن سایز',
                           callback: () {
                             showModalBottomSheet(
+                                isScrollControlled: true,
                                 context: context,
                                 backgroundColor: Colors.transparent,
                                 // Add this line of Code
@@ -169,7 +191,11 @@ class _SizeState extends State<Size> {
                                       builder: (BuildContext context,
                                               setState) =>
                                           Container(
-                                            height: 500.0,
+                                            height: kIsWeb
+                                                ? 600
+                                                : MediaQuery.of(context)
+                                                    .size
+                                                    .height,
                                             color: Colors.transparent,
                                             child: Container(
                                               decoration: const BoxDecoration(
@@ -199,11 +225,13 @@ class _SizeState extends State<Size> {
                                                                   .width
                                                               : 600,
                                                       child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
+                                                        // mainAxisAlignment:
+                                                        //     MainAxisAlignment
+                                                        //         .center,
                                                         children: [
-                                                          //////////////////////////////////////// Jens Deopdown //////////////////////////////////////
+                                                          const SizedBox(
+                                                            height: 40,
+                                                          ),
                                                           MyWidgets.dropDownWidget(
                                                               context,
                                                               'جنس',
@@ -244,9 +272,6 @@ class _SizeState extends State<Size> {
                                                               optionValue: "id",
                                                               optionLabel:
                                                                   "name"),
-                                                          //////////////////////////////////////// Jens Deopdown ///////////////////////////////////////
-
-                                                          ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
                                                           MyWidgets.dropDownWidget(
                                                               context,
                                                               'کاربری',
@@ -272,8 +297,6 @@ class _SizeState extends State<Size> {
                                                               optionValue: "id",
                                                               optionLabel:
                                                                   "name"),
-                                                          ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
-
                                                           MyTextboxTitle(
                                                               title: 'عنوان',
                                                               isNumber: false,
@@ -283,6 +306,47 @@ class _SizeState extends State<Size> {
                                                                   (value) =>
                                                                       name =
                                                                           value),
+                                                          SizedBox(
+                                                            width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width <
+                                                                    600
+                                                                ? MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width
+                                                                : 600,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Expanded(
+                                                                  child: MyTextboxTitle(
+                                                                      title: 'طول کاغذ',
+                                                                      isNumber: true,
+                                                                      isPrice: false,
+                                                                      lengthLimit: 0,
+                                                                      callback: (value) {
+                                                                        paperTool =
+                                                                            int.parse(value);
+                                                                      }),
+                                                                ),
+                                                                Expanded(
+                                                                  child: MyTextboxTitle(
+                                                                      title: 'عرض کاغذ',
+                                                                      isNumber: true,
+                                                                      isPrice: false,
+                                                                      lengthLimit: 0,
+                                                                      callback: (value) {
+                                                                        paperArz =
+                                                                            int.parse(value);
+                                                                      }),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
                                                           const SizedBox(
                                                             height: 20,
                                                           ),
@@ -330,8 +394,13 @@ class _SizeState extends State<Size> {
                                   itemCount: _loadedSize.length,
                                   itemBuilder: (context, index) => Container(
                                     margin: const EdgeInsets.only(bottom: 20),
+                                    padding: kIsWeb
+                                        ? const EdgeInsets.symmetric(
+                                            horizontal: 20)
+                                        : const EdgeInsets.symmetric(
+                                            horizontal: 5),
                                     child: SizedBox(
-                                      height: 50,
+                                      height: 55,
                                       child: Container(
                                         decoration: BoxDecoration(
                                           borderRadius:
@@ -361,8 +430,13 @@ class _SizeState extends State<Size> {
                                                     .toString();
 
                                             name = _loadedSize[index]['name'];
+                                            paperTool =
+                                                _loadedSize[index]['paperTool'];
+                                            paperArz =
+                                                _loadedSize[index]['paperArz'];
 
                                             showModalBottomSheet(
+                                                isScrollControlled: true,
                                                 context: context,
                                                 backgroundColor:
                                                     Colors.transparent,
@@ -373,7 +447,12 @@ class _SizeState extends State<Size> {
                                                           (BuildContext context,
                                                                   setState) =>
                                                               Container(
-                                                                height: 500.0,
+                                                                height: kIsWeb
+                                                                    ? 600
+                                                                    : MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height,
                                                                 color: Colors
                                                                     .transparent,
                                                                 child:
@@ -401,10 +480,12 @@ class _SizeState extends State<Size> {
                                                                               : 600,
                                                                           child:
                                                                               Column(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.center,
+                                                                            // mainAxisAlignment:
+                                                                            //     MainAxisAlignment.center,
                                                                             children: [
-                                                                              //////////////////////////////////////// Jens Deopdown //////////////////////////////////////
+                                                                              const SizedBox(
+                                                                                height: 40,
+                                                                              ),
                                                                               MyWidgets.dropDownWidget(context, 'جنس', "جنس را انتخاب کنید", _selectedJensId, _loadedJens, (onChangedVal) {
                                                                                 setState(() {
                                                                                   _selectedJensId = onChangedVal! ?? "";
@@ -417,15 +498,11 @@ class _SizeState extends State<Size> {
                                                                                 }
                                                                                 return null;
                                                                               }, borderFocusColor: Theme.of(context).primaryColor, borderColor: Theme.of(context).primaryColor, contentPadding: 5, optionValue: "id", optionLabel: "name"),
-                                                                              //////////////////////////////////////// Jens Deopdown ///////////////////////////////////////
-
-                                                                              ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
                                                                               MyWidgets.dropDownWidget(context, 'کاربری', "کاربری را انتخاب کنید", _selectedKarbariId, _filteredKarbari, (onChangedVal) {
                                                                                 setState(() {
                                                                                   _selectedKarbariId = onChangedVal;
                                                                                 });
                                                                               }, (onValidateVal) => null, borderFocusColor: Theme.of(context).primaryColor, borderColor: Theme.of(context).primaryColor, optionValue: "id", optionLabel: "name"),
-                                                                              ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
                                                                               MyTextboxTitle(
                                                                                   title: 'عنوان',
                                                                                   isNumber: false,
@@ -436,6 +513,36 @@ class _SizeState extends State<Size> {
                                                                                     name = value;
                                                                                     jens_id = _loadedSize[index]['jens_id'];
                                                                                   }),
+                                                                              SizedBox(
+                                                                                width: MediaQuery.of(context).size.width < 600 ? MediaQuery.of(context).size.width : 600,
+                                                                                child: Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                  children: [
+                                                                                    Expanded(
+                                                                                      child: MyTextboxTitle(
+                                                                                          title: 'طول کاغذ',
+                                                                                          isNumber: true,
+                                                                                          isPrice: false,
+                                                                                          lengthLimit: 0,
+                                                                                          initialText: _loadedSize[index]['paperTool'].toString(),
+                                                                                          callback: (value) {
+                                                                                            paperTool = int.parse(value);
+                                                                                          }),
+                                                                                    ),
+                                                                                    Expanded(
+                                                                                      child: MyTextboxTitle(
+                                                                                          title: 'عرض کاغذ',
+                                                                                          isNumber: true,
+                                                                                          isPrice: false,
+                                                                                          lengthLimit: 0,
+                                                                                          initialText: _loadedSize[index]['paperArz'].toString(),
+                                                                                          callback: (value) {
+                                                                                            paperArz = int.parse(value);
+                                                                                          }),
+                                                                                    )
+                                                                                  ],
+                                                                                ),
+                                                                              ),
                                                                               const SizedBox(
                                                                                 height: 20,
                                                                               ),
@@ -466,18 +573,38 @@ class _SizeState extends State<Size> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Icon(
-                                                Icons.store,
-                                                color: Colors.black87,
-                                                size: 19,
-                                              ),
                                               Text(
-                                                '${getJensNameById(_loadedSize[index]['jens_id'])} - ${_loadedSize[index]['name']}',
-                                                style: const TextStyle(
-                                                  color: Colors.black87,
-                                                  fontFamily: 'IranYekan',
-                                                  fontSize: 17,
-                                                ),
+                                                '${getJensNameById(_loadedSize[index]['jens_id'])}',
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontFamily: 'IranYekan',
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    '${_loadedSize[index]['name']}',
+                                                    style: const TextStyle(
+                                                      color: Colors.black87,
+                                                      fontFamily: 'IranYekan',
+                                                      fontSize: 17,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${getKarbariNameById(_loadedSize[index]['karbari_id'])}',
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      fontFamily: 'IranYekan',
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                               const Icon(
                                                 Icons.arrow_forward_ios,
@@ -491,6 +618,8 @@ class _SizeState extends State<Size> {
                                     ),
                                   ),
                                 )
+
+
                               : const Text(
                                   'سایزی یافت نشد',
                                   style: TextStyle(fontSize: 18),

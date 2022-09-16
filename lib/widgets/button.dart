@@ -1,3 +1,4 @@
+import 'package:amertat/store.dart';
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
@@ -19,16 +20,16 @@ class MyButton extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               alignment: Alignment.center,
               onPrimary: Colors.lightBlueAccent,
-              elevation: 3,
-              primary: Theme.of(context).primaryColor,
+              // elevation: 3,
+              primary: Palette.mySecondColor,
             ),
             onPressed: () => callback(),
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'IranYekan',
-                fontSize: 15,
+                fontSize: text == "+" ? 25 : 15,
               ),
             ),
           ),

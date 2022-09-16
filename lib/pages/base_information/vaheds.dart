@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../api.dart';
 import '../../widgets/button.dart';
 import '../../widgets/textbox_title.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 class Vaheds extends StatefulWidget {
   const Vaheds({Key? key}) : super(key: key);
 

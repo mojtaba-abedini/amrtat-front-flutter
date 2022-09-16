@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../../api.dart';
 import '../../widgets/button.dart';
+import '../../widgets/my_widget.dart';
 import '../../widgets/textbox_title.dart';
 
 class PaperPrice extends StatefulWidget {
@@ -15,37 +16,65 @@ class PaperPrice extends StatefulWidget {
 }
 
 class _PaperPriceState extends State<PaperPrice> {
-
   bool _isLoading = true;
   late String name;
   late int jens_id;
   late int gram_id;
   late int shit_size_id;
+  late int price;
 
+  String? _selectedJensId;
+  String? _selectedGramId;
+  String? _selectedShitId;
 
-  late String address;
+  List<dynamic> _loadedGram = [];
+  List<dynamic> _loadedJens = [];
+  List<dynamic> _loadedShit = [];
+  List<dynamic> _loadedPaperPrice = [];
+
   late int id;
+  static const apiUrlJens = JensApi;
+  static const apiUrlGram = GramApi;
+  static const apiUrlShit = ShitSizeApi;
   static const apiUrl = PaperPriceApi;
 
-  List _loadedList = [];
-
   Future<void> _fetch() async {
+    final responseGram = await http.get(Uri.parse(apiUrlGram));
+    final dataGram = json.decode(responseGram.body);
 
-    final response = await http.get(Uri.parse(apiUrl));
-    final data = json.decode(response.body);
+    final responseJens = await http.get(Uri.parse(apiUrlJens));
+    final dataJens = json.decode(responseJens.body);
+
+    final responseShit = await http.get(Uri.parse(apiUrlShit));
+    final dataShit = json.decode(responseShit.body);
+
+    final responsePaperPrice = await http.get(Uri.parse(apiUrl));
+    final dataPaperPrice = json.decode(responsePaperPrice.body);
+
     setState(() {
-      _loadedList = data['data'];
+      _loadedGram = dataGram['data'];
+      _loadedJens = dataJens['data'];
+      _loadedShit = dataShit['data'];
+      _loadedPaperPrice = dataPaperPrice['data'];
     });
+
     _isLoading = false;
   }
-
 
   void onPressAdd() async {
     setState(() {
       _isLoading = true;
     });
     Navigator.pop(context, true);
-    http.Response response = await create(name,address);
+    name =
+        "${getJensNameById(int.parse(_selectedJensId!))} ${getGramNameById(int.parse(_selectedGramId!))} گرم ${getShitNameById(int.parse(_selectedShitId!))}";
+
+    jens_id = int.parse(_selectedJensId!);
+    gram_id = int.parse(_selectedGramId!);
+    shit_size_id = int.parse(_selectedShitId!);
+
+    http.Response response =
+        await create(name, jens_id, gram_id, shit_size_id, price);
     print(response.body);
 
     _fetch();
@@ -56,7 +85,14 @@ class _PaperPriceState extends State<PaperPrice> {
       _isLoading = true;
     });
     Navigator.pop(context);
-    http.Response response = await edit(name,address, id);
+    name =
+        "${getJensNameById(int.parse(_selectedJensId!))} ${getGramNameById(int.parse(_selectedGramId!))} گرم ${getShitNameById(int.parse(_selectedShitId!))}";
+    jens_id = int.parse(_selectedJensId!);
+    gram_id = int.parse(_selectedGramId!);
+    shit_size_id = int.parse(_selectedShitId!);
+
+    http.Response response =
+        await edit(id, name, jens_id, gram_id, shit_size_id, price);
     print(response.body);
     _fetch();
   }
@@ -71,15 +107,19 @@ class _PaperPriceState extends State<PaperPrice> {
     _fetch();
   }
 
-  Future<http.Response> edit(String name, String address, int id) {
+  Future<http.Response> edit(
+      int id, String name, int jens_id, int gram_id, int shit_id, int price) {
     return http.put(
       Uri.parse("$apiUrl/$id"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
+      body: jsonEncode({
         'name': name,
-        'address': address,
+        'jens_id': jens_id,
+        'gram_id': gram_id,
+        'shit_size_id': shit_id,
+        'price': price,
       }),
     );
   }
@@ -93,17 +133,39 @@ class _PaperPriceState extends State<PaperPrice> {
     );
   }
 
-  Future<http.Response> create(String name,String address) {
+  Future<http.Response> create(
+      String name, int jens_id, int gram_id, int shit_id, int price) {
     return http.post(
       Uri.parse(apiUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
+      body: jsonEncode({
         'name': name,
-        'address': address,
+        'jens_id': jens_id,
+        'gram_id': gram_id,
+        'shit_size_id': shit_id,
+        'price': price,
       }),
     );
+  }
+
+  String getJensNameById(int jens_id) {
+    final foundedJens =
+        _loadedJens.singleWhere((element) => element['id'] == jens_id);
+    return foundedJens['name'];
+  }
+
+  String getGramNameById(int gram_id) {
+    final foundedGram =
+        _loadedGram.singleWhere((element) => element['id'] == gram_id);
+    return foundedGram['gram'];
+  }
+
+  String getShitNameById(int shit_id) {
+    final foundedShit =
+        _loadedShit.singleWhere((element) => element['id'] == shit_id);
+    return foundedShit['name'];
   }
 
   @override
@@ -117,7 +179,7 @@ class _PaperPriceState extends State<PaperPrice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('انبار ها'),
+        title: const Text('قیمت ها'),
         centerTitle: true,
         toolbarHeight: 75,
       ),
@@ -136,15 +198,16 @@ class _PaperPriceState extends State<PaperPrice> {
                     child: Column(
                       children: [
                         MyButton(
-                          text: 'اضافه کردن انبار',
+                          text: 'اضافه کردن قیمت',
                           callback: () {
                             showModalBottomSheet(
+                                isScrollControlled: true,
                                 context: context,
                                 backgroundColor: Colors.transparent,
                                 // Add this line of Code
                                 builder: (builder) {
                                   return Container(
-                                    height: 350.0,
+                                    height: 600.0,
                                     color: Colors.transparent,
                                     child: Container(
                                       decoration: const BoxDecoration(
@@ -160,31 +223,103 @@ class _PaperPriceState extends State<PaperPrice> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
+                                                // MyTextboxTitle(
+                                                //     title: 'عنوان',
+                                                //     isNumber: false,
+                                                //     isPrice: false,
+                                                //     lengthLimit: 0,
+                                                //     callback: (value) =>
+                                                //         name = value),
+                                                MyWidgets.dropDownWidget(
+                                                    context,
+                                                    'جنس',
+                                                    "جنس را انتخاب کنید",
+                                                    _selectedJensId,
+                                                    _loadedJens,
+                                                    (onChangedVal) {
+                                                  setState(() {
+                                                    _selectedJensId =
+                                                        onChangedVal;
+                                                  });
+                                                }, (onValidateVal) => null,
+                                                    borderFocusColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    borderColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    optionValue: "id",
+                                                    optionLabel: "name"),
+
+                                                MyWidgets.dropDownWidget(
+                                                    context,
+                                                    'گرماژ',
+                                                    "گرماژ را انتخاب کنید",
+                                                    _selectedGramId,
+                                                    _loadedGram,
+                                                    (onChangedVal) {
+                                                  setState(() {
+                                                    _selectedGramId =
+                                                        onChangedVal;
+                                                  });
+                                                }, (onValidateVal) => null,
+                                                    borderFocusColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    borderColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    optionValue: "id",
+                                                    optionLabel: "gram"),
+
+                                                MyWidgets.dropDownWidget(
+                                                    context,
+                                                    'اندازه شیت',
+                                                    "اندازه شیت را انتخاب کنید",
+                                                    _selectedShitId,
+                                                    _loadedShit,
+                                                    (onChangedVal) {
+                                                  setState(() {
+                                                    _selectedShitId =
+                                                        onChangedVal;
+                                                  });
+                                                }, (onValidateVal) => null,
+                                                    borderFocusColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    borderColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    optionValue: "id",
+                                                    optionLabel: "name"),
+
                                                 MyTextboxTitle(
-                                                    title: 'نام انبار',
+                                                    title: 'قیمت',
                                                     isNumber: false,
                                                     isPrice: false,
                                                     lengthLimit: 0,
-                                                    callback: (value) =>
-                                                        name = value),
-                                                MyTextboxTitle(
-                                                    title: 'آدرس انبار',
-                                                    isNumber: false,
-                                                    isPrice: false,
-                                                    lengthLimit: 0,
-                                                    callback: (value) =>
-                                                    address = value),
+                                                    callback: (value) => price =
+                                                        int.parse(value)),
                                                 const SizedBox(
                                                   height: 20,
                                                 ),
                                                 SizedBox(
-                                                  width: MediaQuery.of(context).size.width < 600
-                                                      ? MediaQuery.of(context).size.width : 600,
+                                                  width: MediaQuery.of(context)
+                                                              .size
+                                                              .width <
+                                                          600
+                                                      ? MediaQuery.of(context)
+                                                          .size
+                                                          .width
+                                                      : 600,
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.spaceAround,
+                                                        MainAxisAlignment
+                                                            .spaceAround,
                                                     children: [
-                                                      MyButton(text: 'ذخیره',callback: onPressAdd),
+                                                      MyButton(
+                                                          text: 'ذخیره',
+                                                          callback: onPressAdd),
                                                     ],
                                                   ),
                                                 ),
@@ -202,9 +337,9 @@ class _PaperPriceState extends State<PaperPrice> {
                           },
                         ),
                         Expanded(
-                          child: _loadedList.isNotEmpty
+                          child: _loadedPaperPrice.isNotEmpty
                               ? ListView.builder(
-                                  itemCount: _loadedList.length,
+                                  itemCount: _loadedPaperPrice.length,
                                   itemBuilder: (context, index) => Container(
                                     margin: const EdgeInsets.only(bottom: 20),
                                     child: SizedBox(
@@ -223,16 +358,31 @@ class _PaperPriceState extends State<PaperPrice> {
                                             primary: Colors.white,
                                           ),
                                           onPressed: () {
-                                            id = _loadedList[ index]['id'];
-                                            name= _loadedList[ index]['name'];
-                                            address = _loadedList[ index]['address'];
+                                            id = _loadedPaperPrice[index]['id'];
+                                            name = _loadedPaperPrice[index]
+                                                ['name'];
+                                            _selectedJensId =
+                                                _loadedPaperPrice[index]
+                                                        ['jens_id']
+                                                    .toString();
+                                            _selectedGramId =
+                                                _loadedPaperPrice[index]
+                                                        ['gram_id']
+                                                    .toString();
+                                            _selectedShitId =
+                                                _loadedPaperPrice[index]
+                                                        ['shit_size_id']
+                                                    .toString();
+                                            price = _loadedPaperPrice[index]
+                                                ['price'];
                                             showModalBottomSheet(
+                                                isScrollControlled: true,
                                                 context: context,
                                                 backgroundColor:
                                                     Colors.transparent,
                                                 builder: (builder) {
                                                   return Container(
-                                                    height: 400.0,
+                                                    height: 600.0,
                                                     color: Colors.transparent,
                                                     child: Container(
                                                       decoration: const BoxDecoration(
@@ -255,39 +405,139 @@ class _PaperPriceState extends State<PaperPrice> {
                                                                   MainAxisAlignment
                                                                       .center,
                                                               children: [
-                                                                MyTextboxTitle(
-                                                                    title: 'نام انبار',
-                                                                    isNumber:false,
-                                                                    isPrice:false,
-                                                                    lengthLimit:0,
-                                                                    initialText:_loadedList[index]['name'],
-                                                                    callback:(value) { name =value;
-                                                                      id = _loadedList[index]['id'];
+                                                                // MyTextboxTitle(
+                                                                //     title: 'عنوان',
+                                                                //     isNumber:false,
+                                                                //     isPrice:false,
+                                                                //     lengthLimit:0,
+                                                                //     initialText:_loadedPaperPrice[index]['name'],
+                                                                //     callback:(value) { name =value;
+                                                                //       id = _loadedPaperPrice[index]['id'];
+                                                                //     }),
 
-                                                                    }),
-                                                                MyTextboxTitle(
-                                                                    title: 'آدرس انبار',
-                                                                    isNumber:false,
-                                                                    isPrice:false,
-                                                                    lengthLimit:0,
-                                                                    initialText:_loadedList[index]['address'],
-                                                                    callback:(value) { address =value;
-                                                                    id = _loadedList[index]['id'];
+                                                                MyWidgets.dropDownWidget(
+                                                                    context,
+                                                                    'جنس',
+                                                                    "جنس را انتخاب کنید",
+                                                                    _selectedJensId,
+                                                                    _loadedJens,
+                                                                    (onChangedVal) {
+                                                                  setState(() {
+                                                                    _selectedJensId =
+                                                                        onChangedVal;
+                                                                  });
+                                                                },
+                                                                    (onValidateVal) =>
+                                                                        null,
+                                                                    borderFocusColor:
+                                                                        Theme.of(context)
+                                                                            .primaryColor,
+                                                                    borderColor:
+                                                                        Theme.of(context)
+                                                                            .primaryColor,
+                                                                    optionValue:
+                                                                        "id",
+                                                                    optionLabel:
+                                                                        "name"),
 
-                                                                    }),
+                                                                MyWidgets.dropDownWidget(
+                                                                    context,
+                                                                    'گرماژ',
+                                                                    "گرماژ را انتخاب کنید",
+                                                                    _selectedGramId,
+                                                                    _loadedGram,
+                                                                    (onChangedVal) {
+                                                                  setState(() {
+                                                                    _selectedGramId =
+                                                                        onChangedVal;
+                                                                  });
+                                                                },
+                                                                    (onValidateVal) =>
+                                                                        null,
+                                                                    borderFocusColor:
+                                                                        Theme.of(context)
+                                                                            .primaryColor,
+                                                                    borderColor:
+                                                                        Theme.of(context)
+                                                                            .primaryColor,
+                                                                    optionValue:
+                                                                        "id",
+                                                                    optionLabel:
+                                                                        "gram"),
+
+                                                                MyWidgets.dropDownWidget(
+                                                                    context,
+                                                                    'اندازه شیت',
+                                                                    "اندازه شیت را انتخاب کنید",
+                                                                    _selectedShitId,
+                                                                    _loadedShit,
+                                                                    (onChangedVal) {
+                                                                  setState(() {
+                                                                    _selectedShitId =
+                                                                        onChangedVal;
+
+                                                                  });
+                                                                },
+                                                                    (onValidateVal) =>
+                                                                        null,
+                                                                    borderFocusColor:
+                                                                        Theme.of(context)
+                                                                            .primaryColor,
+                                                                    borderColor:
+                                                                        Theme.of(context)
+                                                                            .primaryColor,
+                                                                    optionValue:
+                                                                        "id",
+                                                                    optionLabel:
+                                                                        "name"),
+
+                                                                MyTextboxTitle(
+                                                                    title:
+                                                                        'قیمت',
+                                                                    isNumber:
+                                                                        false,
+                                                                    isPrice:
+                                                                        false,
+                                                                    lengthLimit:
+                                                                        0,
+                                                                    initialText:
+                                                                        _loadedPaperPrice[index]['price']
+                                                                            .toString(),
+                                                                    callback: (value) =>
+                                                                        price =
+                                                                            int.parse(value)),
+                                                                const SizedBox(
+                                                                  height: 20,
+                                                                ),
+
                                                                 const SizedBox(
                                                                   height: 20,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: MediaQuery.of(context).size.width < 600
-                                                                      ? MediaQuery.of(context).size.width : 600,
+                                                                  width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width <
+                                                                          600
+                                                                      ? MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width
+                                                                      : 600,
                                                                   child: Row(
                                                                     mainAxisAlignment:
                                                                         MainAxisAlignment
                                                                             .spaceAround,
                                                                     children: [
-                                                                      MyButton(text:'ذخیره', callback:onPressEdit),
-                                                                      MyButton(text:'حذف انبار',callback:onPressDelete),
+                                                                      MyButton(
+                                                                          text:
+                                                                              'ذخیره',
+                                                                          callback:
+                                                                              onPressEdit),
+                                                                      MyButton(
+                                                                          text:
+                                                                              'حذف قیمت',
+                                                                          callback:
+                                                                              onPressDelete),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -302,19 +552,24 @@ class _PaperPriceState extends State<PaperPrice> {
                                                     ),
                                                   );
                                                 });
-
                                           },
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Icon(
-                                                Icons.store,
-                                                color: Colors.black87,
-                                                size: 19,
+                                              Text(
+                                                '${_loadedPaperPrice[index]['price']} تومان',
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontFamily: 'IranYekan',
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                               Text(
-                                                _loadedList[index]['name'],
+                                                _loadedPaperPrice[index]
+                                                    ['name'],
                                                 style: const TextStyle(
                                                   color: Colors.black87,
                                                   fontFamily: 'IranYekan',
@@ -334,7 +589,7 @@ class _PaperPriceState extends State<PaperPrice> {
                                   ),
                                 )
                               : const Text(
-                                  'انباری یافت نشد',
+                                  'قیمتی یافت نشد',
                                   style: TextStyle(fontSize: 18),
                                 ),
                         )

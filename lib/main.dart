@@ -5,6 +5,7 @@ import 'package:amertat/pages/home/store_managment.dart';
 import 'package:amertat/pages/main_page.dart';
 
 import 'package:amertat/pages/orders.dart';
+import 'package:amertat/store.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'آمرتات بگ',
       theme: ThemeData(
         fontFamily: 'IranYekan',
-        primarySwatch: Colors.green,
+        primarySwatch: Palette.myFirstColor,
       ),
       home: const MyHomePage(title: 'آمرتات بگ'),
     );
@@ -40,7 +41,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final String logoFileName = 'assets/Logo.svg';
 
   late int _selectedDestination = 0;
@@ -120,8 +120,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(16.0),
                     height: 200,
                     child: SizedBox(
-
-                      child: SvgPicture.asset(logoFileName,width:130,height: 130,),
+                      child: SvgPicture.asset(
+                        logoFileName,
+                        width: 130,
+                        height: 130,
+                      ),
                     )),
               ),
               const Divider(
@@ -180,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               ListTile(
-                  leading: const Icon(Icons.bookmark),
+                  leading: const Icon(Icons.announcement_outlined),
                   title: const Text(
                     'درباره ما',
                     style: TextStyle(fontSize: 15),
@@ -190,8 +193,53 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const About()));
                   }),
+              ListTile(
+                  leading: const Icon(Icons.exit_to_app),
+                  title: const Text(
+                    'خروج',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  selected: _selectedDestination == 3,
+                  onTap: () {}),
             ],
           )),
         ));
+  }
+}
+
+
+class GradientAppBar extends StatelessWidget {
+
+  final String title;
+  final double barHeight = 50.0;
+
+  GradientAppBar(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    final double statusbarHeight = MediaQuery
+        .of(context)
+        .padding
+        .top;
+
+    return  Container(
+      padding: EdgeInsets.only(top: statusbarHeight),
+      height: statusbarHeight + barHeight,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+            colors: [Colors.red, Colors.blue],
+            begin: FractionalOffset(0.0, 0.0),
+            end: FractionalOffset(0.5, 0.0),
+            stops: [0.0, 1.0],
+            tileMode: TileMode.clamp
+        ),
+      ),
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }

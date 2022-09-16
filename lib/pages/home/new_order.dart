@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:amertat/api.dart';
 import 'package:amertat/widgets/button.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:amertat/store.dart';
 import '../../widgets/date_picker.dart';
@@ -22,6 +22,11 @@ class NewOrder extends StatefulWidget {
 
 class _NewOrderState extends State<NewOrder> {
   bool _isLoading = true;
+  bool _isVisible = false;
+  late String name;
+  late String phone;
+  late String address;
+  String? date;
 
   String? _selefonId;
   String? _talakoobId;
@@ -32,8 +37,10 @@ class _NewOrderState extends State<NewOrder> {
   String? _selectedKarbariId;
   String? _selectedSizeId;
   String? _selectedBankId;
+  String? _selectedTarafHesabId;
 
   List _loadedJens = [];
+  List _loadedTarafHesab = [];
   List _loadedSize = [];
   List _loadedKarbari = [];
   List _loadedBank = [];
@@ -44,6 +51,32 @@ class _NewOrderState extends State<NewOrder> {
   static const karbariApiUrl = KarbariApi;
   static const sizeApiUrl = SizeApi;
   static const bankApiUrl = BankApi;
+  static const tarafHesabApiUrl = TarafHesabApi;
+
+  void onPressAdd() async {
+    setState(() {
+      _isLoading = true;
+    });
+    Navigator.pop(context, true);
+    http.Response response = await create(name, phone, address);
+    print(response.body);
+
+    _fetchTarafHesab();
+  }
+
+  Future<http.Response> create(String name, String phone, String address) {
+    return http.post(
+      Uri.parse(TarafHesabApi),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'name': name,
+        'phone': phone,
+        'address': address,
+      }),
+    );
+  }
 
   Future<void> _fetchJens() async {
     final response = await http.get(Uri.parse(jensApiUrl));
@@ -67,7 +100,6 @@ class _NewOrderState extends State<NewOrder> {
     setState(() {
       _loadedSize = data['data'];
     });
-    _isLoading = false;
   }
 
   Future<void> _fetchBank() async {
@@ -78,6 +110,15 @@ class _NewOrderState extends State<NewOrder> {
     });
   }
 
+  Future<void> _fetchTarafHesab() async {
+    final response = await http.get(Uri.parse(tarafHesabApiUrl));
+    final data = json.decode(response.body);
+    setState(() {
+      _loadedTarafHesab = data['data'];
+    });
+    _isLoading = false;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +126,7 @@ class _NewOrderState extends State<NewOrder> {
     _fetchKarbari();
     _fetchBank();
     _fetchSize();
+    _fetchTarafHesab();
   }
 
   void onPressButton() {
@@ -108,18 +150,146 @@ class _NewOrderState extends State<NewOrder> {
                     const SizedBox(
                       height: 20,
                     ),
-                    MyTextboxTitle(
-                        title: 'نام و نام خانوادگی مشتری',
-                        isNumber: false,
-                        isPrice: false,
-                        lengthLimit: 0,
-                        callback: (value) => newOrderName = value),
-                    MyTextboxTitle(
-                        title: 'تلفن تماس',
-                        isNumber: true,
-                        isPrice: false,
-                        lengthLimit: 10,
-                        callback: (value) => newOrderPhone = value),
+                    SizedBox(
+                      width: (MediaQuery.of(context).size.width < 600
+                          ? MediaQuery.of(context).size.width
+                          : 640),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: SizedBox(
+                              width: 55,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 45),
+                                child: MyButton(
+                                  text: '+',
+                                  callback: () {
+                                    showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        context: context,
+                                        backgroundColor: Colors.transparent,
+                                        // Add this line of Code
+                                        builder: (builder) {
+                                          return Container(
+                                            height: kIsWeb
+                                                ? 500
+                                                : MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                            color: Colors.transparent,
+                                            child: Container(
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  20.0),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  20.0))),
+                                              child: Center(
+                                                child: Directionality(
+                                                  textDirection:
+                                                      TextDirection.rtl,
+                                                  child: Center(
+                                                    child: Column(
+                                                      children: [
+                                                        const SizedBox(
+                                                          height: 40,
+                                                        ),
+                                                        MyTextboxTitle(
+                                                            title:
+                                                                'نام طرف حساب',
+                                                            isNumber: false,
+                                                            isPrice: false,
+                                                            lengthLimit: 0,
+                                                            callback: (value) =>
+                                                                name = value),
+                                                        MyTextboxTitle(
+                                                            title: 'تلفن',
+                                                            isNumber: false,
+                                                            isPrice: false,
+                                                            lengthLimit: 0,
+                                                            callback: (value) =>
+                                                                phone = value),
+                                                        MyTextboxTitle(
+                                                            title: 'آدرس',
+                                                            isNumber: false,
+                                                            isPrice: false,
+                                                            lengthLimit: 0,
+                                                            callback: (value) =>
+                                                                address =
+                                                                    value),
+                                                        const SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width <
+                                                                  600
+                                                              ? MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width
+                                                              : 600,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              MyButton(
+                                                                  text: 'ذخیره',
+                                                                  callback:
+                                                                      onPressAdd),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: MyWidgets.dropDownWidget(
+                                context,
+                                'طرف حساب',
+                                "طرف حساب را انتخاب کنید",
+                                _selectedTarafHesabId,
+                                _loadedTarafHesab, (onChangedVal) {
+                              setState(() {
+                                _selectedTarafHesabId = onChangedVal! ?? "";
+                              });
+                            }, (onValidateVal) {
+                              if (onValidateVal == null) {
+                                return "طرف حساب را انتخاب کنید";
+                              }
+                              return null;
+                            },
+                                borderFocusColor:
+                                    Theme.of(context).primaryColor,
+                                borderColor: Colors.grey,
+                                contentPadding: 10,
+                                optionValue: "id",
+                                optionLabel: "name"),
+                          )
+                        ],
+                      ),
+                    ),
 
                     //////////////////////////////////////// Jens Deopdown //////////////////////////////////////
                     MyWidgets.dropDownWidget(
@@ -166,29 +336,83 @@ class _NewOrderState extends State<NewOrder> {
                                 element['karbari_id'].toString() ==
                                 _selectedKarbariId.toString())
                             .toList();
+
+                        _filteredSize.add({
+                          'id': 0,
+                          'jens_id': 1,
+                          'karbari_id': 1,
+                          'name': 'سایر',
+                          'paperTool': 50,
+                          'paperArz': 23,
+                          'created_at': null,
+                          'updated_at': null
+                        });
                       });
                     }, (onValidateVal) => null,
                         borderFocusColor: Theme.of(context).primaryColor,
                         borderColor: Colors.grey,
                         optionValue: "id",
                         optionLabel: "name"),
-                    ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
-                    ////////////////////////////////////// Size Deopdown /////////////////////////////////////
+
                     MyWidgets.dropDownWidget(
                         context,
                         'سایز سفارش',
                         "سایز را انتخاب کنید",
                         _selectedSizeId,
                         _filteredSize, (onChangedVal) {
+                      print(_isVisible);
                       setState(() {
                         _selectedSizeId = onChangedVal;
+                        int.parse(_selectedSizeId!) == 0
+                            ? _isVisible = true
+                            : _isVisible = false;
                       });
                     }, (onValidateVal) => null,
                         borderFocusColor: Theme.of(context).primaryColor,
                         borderColor: Colors.grey,
                         optionValue: "id",
                         optionLabel: "name"),
-                    ////////////////////////////////////// Karbari Deopdown /////////////////////////////////////
+
+                    Visibility(
+                      visible: _isVisible,
+                      child: MyTextboxTitle(
+                          title: 'سایز اختصاصی',
+                          isNumber: false,
+                          isPrice: false,
+                          lengthLimit: 0,
+                          callback: (value) => newOrderPrice = value),
+                    ),
+                    SizedBox(
+                      width: (MediaQuery.of(context).size.width < 600
+                          ? MediaQuery.of(context).size.width
+                          : 640),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Visibility(
+                              visible: _isVisible,
+                              child: MyTextboxTitle(
+                                  title: 'عرض کاغذ',
+                                  isNumber: false,
+                                  isPrice: false,
+                                  lengthLimit: 0,
+                                  callback: (value) => newOrderPrice = value),
+                            ),
+                          ),
+                          Expanded(
+                            child: Visibility(
+                              visible: _isVisible,
+                              child: MyTextboxTitle(
+                                  title: 'طول کاغذ',
+                                  isNumber: false,
+                                  isPrice: false,
+                                  lengthLimit: 0,
+                                  callback: (value) => newOrderPrice = value),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
                     MyTextboxTitle(
                         title: 'تعداد',
@@ -255,7 +479,7 @@ class _NewOrderState extends State<NewOrder> {
                     MyWidgets.dropDownWidget(
                         context,
                         'صحافی و بسته بندی',
-                        "وضعیت لترپرس را انتخاب کنید",
+                        "وضعیت صحافی را انتخاب کنید",
                         _sahafiId,
                         orderAttribute, (onChangedVal) {
                       setState(() {
@@ -281,7 +505,7 @@ class _NewOrderState extends State<NewOrder> {
                     MyDatePicker(
                         title: 'تاریخ واریز بیعانه',
                         callback: (jalaliDate, georgianDate) =>
-                            newOrderFirstPriceDate = jalaliDate),
+                            date = jalaliDate),
                     ////////////////////////////////////// Size Deopdown /////////////////////////////////////
                     MyWidgets.dropDownWidget(
                         context,

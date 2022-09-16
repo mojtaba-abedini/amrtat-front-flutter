@@ -6,6 +6,7 @@ import 'package:amertat/pages/base_information/paper_price.dart';
 import 'package:amertat/pages/base_information/shit_size.dart';
 import 'package:amertat/pages/base_information/stores.dart';
 import 'package:amertat/pages/base_information/size.dart';
+import 'package:amertat/pages/base_information/taraf_hesab.dart';
 import 'package:amertat/pages/base_information/vaheds.dart';
 
 import 'package:flutter/material.dart';
@@ -39,82 +40,64 @@ class _BaseInformationState extends State<BaseInformation> {
                 const SizedBox(
                   height: 30,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MyButton(
-                        text: 'قیمت کاغذ',
-                        callback: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const PaperPrice()))),
-                    const SizedBox(width: 30,),
-                    MyButton(
-                        text: 'قیمت سایر خدمات',
-                        callback: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ServicesPrice()))),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MyButton(
-                        text: 'جنس کاغذ',
-                        callback: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const Jens()))),
-                    const SizedBox(width: 30,),
-                    MyButton(
-                        text: 'کاربری ها',
-                        callback: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const Karbari()))),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MyButton(
-                        text: 'سایز محصولات',
-                        callback: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const Size()))),
-                    const SizedBox(width: 30,),
-                    MyButton(
-                        text: 'اندازه شیت',
-                        callback: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ShitSize()))),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MyButton(
-                        text: 'گرماژ',
-                        callback: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const Grams()))),
-                    const SizedBox(width: 30,),
-                    MyButton(
-                        text: 'انبارها',
-                        callback: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const Stores()))),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MyButton(
-                        text: 'واحدها',
-                        callback: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const Vaheds()))),
-                    const SizedBox(width: 30,),
-                    MyButton(
-                        text: 'بانک ها',
-                        callback: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => const Banks()))),
-                  ],
-                ),
+                MyButton(
+                    text: 'طرف حساب',
+                    callback: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TarafHesab()))),
+                const SizedBox(width: 30,),
+                MyButton(
+                    text: 'قیمت کاغذ',
+                    callback: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PaperPrice()))),
+                const SizedBox(width: 30,),
+                MyButton(
+                    text: 'قیمت سایر خدمات',
+                    callback: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ServicesPrice()))),
+                MyButton(
+                    text: 'جنس کاغذ',
+                    callback: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Jens()))),
+                const SizedBox(width: 30,),
+                MyButton(
+                    text: 'کاربری ها',
+                    callback: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Karbari()))),
+                MyButton(
+                    text: 'سایز محصولات',
+                    callback: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Size()))),
+                const SizedBox(width: 30,),
+                MyButton(
+                    text: 'اندازه شیت',
+                    callback: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ShitSize()))),
+                MyButton(
+                    text: 'گرماژ',
+                    callback: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Grams()))),
+                const SizedBox(width: 30,),
+                MyButton(
+                    text: 'انبارها',
+                    callback: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Stores()))),
+                MyButton(
+                    text: 'واحدها',
+                    callback: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Vaheds()))),
+                const SizedBox(width: 30,),
+                MyButton(
+                    text: 'بانک ها',
+                    callback: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Banks()))),
               ],
             ),
           ),

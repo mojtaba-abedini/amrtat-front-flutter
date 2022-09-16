@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -59,7 +59,7 @@ class _KarbariState extends State<Karbari> {
       _isLoading = true;
     });
     Navigator.pop(context);
-    http.Response response = await edit(_selectedJensId!, name!);
+    http.Response response = await edit(id!, _selectedJensId!, name!);
     print(response.body);
     _fetch();
   }
@@ -74,9 +74,9 @@ class _KarbariState extends State<Karbari> {
     _fetch();
   }
 
-  Future<http.Response> edit(String _selectedJensId, String name) {
+  Future<http.Response> edit(int id,String _selectedJensId, String name) {
     return http.put(
-      Uri.parse("$apiUrlKarbari/$_selectedJensId"),
+      Uri.parse("$apiUrlKarbari/$id"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -150,12 +150,13 @@ class _KarbariState extends State<Karbari> {
                           text: 'اضافه کردن کاربری',
                           callback: () {
                             showModalBottomSheet(
+                              isScrollControlled: true,
                                 context: context,
                                 backgroundColor: Colors.transparent,
                                 // Add this line of Code
                                 builder: (builder) {
                                   return Container(
-                                    height: 350.0,
+                                    height: kIsWeb ? 400 : MediaQuery.of(context).size.height,
                                     color: Colors.transparent,
                                     child: Container(
                                       decoration: const BoxDecoration(
@@ -163,79 +164,75 @@ class _KarbariState extends State<Karbari> {
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(20.0),
                                               topRight: Radius.circular(20.0))),
-                                      child: Center(
-                                        child: Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: Center(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
+                                      child: Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: Column(
 
-                                                MyWidgets.dropDownWidget(
-                                                    context,
-                                                    'جنس',
-                                                    "کاربری را انتخاب کنید",
-                                                    _selectedJensId,
-                                                    _loadedJens,
-                                                        (onChangedVal) {
-                                                      setState(() {
-                                                        _selectedJensId =
-                                                            onChangedVal;
-                                                      });
-                                                    },
-                                                        (onValidateVal) =>
-                                                    null,
-                                                    borderFocusColor:
-                                                    Theme.of(
-                                                        context)
-                                                        .primaryColor,
-                                                    borderColor: Theme
-                                                        .of(
-                                                        context)
-                                                        .primaryColor,
-                                                    optionValue: "id",
-                                                    optionLabel:
-                                                    "name"),
+                                          children: [
+                                            const SizedBox(height: 40,),
+
+                                            MyWidgets.dropDownWidget(
+                                                context,
+                                                'جنس',
+                                                "کاربری را انتخاب کنید",
+                                                _selectedJensId,
+                                                _loadedJens,
+                                                    (onChangedVal) {
+                                                  setState(() {
+                                                    _selectedJensId =
+                                                        onChangedVal;
+                                                  });
+                                                },
+                                                    (onValidateVal) =>
+                                                null,
+                                                borderFocusColor:
+                                                Theme.of(
+                                                    context)
+                                                    .primaryColor,
+                                                borderColor: Theme
+                                                    .of(
+                                                    context)
+                                                    .primaryColor,
+                                                optionValue: "id",
+                                                optionLabel:
+                                                "name"),
 
 
 
-                                                MyTextboxTitle(
-                                                    title: 'عنوان',
-                                                    isNumber: false,
-                                                    isPrice: false,
-                                                    lengthLimit: 0,
-                                                    callback: (value) =>
-                                                        name = value),
-                                                const SizedBox(
-                                                  height: 20,
-                                                ),
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width <
-                                                          600
-                                                      ? MediaQuery.of(context)
-                                                          .size
-                                                          .width
-                                                      : 600,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      MyButton(
-                                                          text: 'ذخیره',
-                                                          callback: onPressAdd),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 20,
-                                                ),
-                                              ],
+                                            MyTextboxTitle(
+                                                title: 'عنوان',
+                                                isNumber: false,
+                                                isPrice: false,
+                                                lengthLimit: 0,
+                                                callback: (value) =>
+                                                    name = value),
+                                            const SizedBox(
+                                              height: 20,
                                             ),
-                                          ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                          .size
+                                                          .width <
+                                                      600
+                                                  ? MediaQuery.of(context)
+                                                      .size
+                                                      .width
+                                                  : 600,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  MyButton(
+                                                      text: 'ذخیره',
+                                                      callback: onPressAdd),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -274,12 +271,13 @@ class _KarbariState extends State<Karbari> {
                                                 ['name'];
 
                                             showModalBottomSheet(
+                                                isScrollControlled:true,
                                                 context: context,
                                                 backgroundColor:
                                                     Colors.transparent,
                                                 builder: (builder) {
                                                   return Container(
-                                                    height: 400.0,
+                                                    height: kIsWeb ? 400 : MediaQuery.of(context).size.height,
                                                     color: Colors.transparent,
                                                     child: Container(
                                                       decoration: const BoxDecoration(
@@ -296,96 +294,90 @@ class _KarbariState extends State<Karbari> {
                                                         child: Directionality(
                                                           textDirection:
                                                               TextDirection.rtl,
-                                                          child: Center(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                MyWidgets.dropDownWidget(
-                                                                    context,
-                                                                    'جنس',
-                                                                    "کاربری را انتخاب کنید",
-                                                                    _selectedJensId,
-                                                                    _loadedJens,
-                                                                        (onChangedVal) {
-                                                                      setState(() {
-                                                                        _selectedJensId =
-                                                                            onChangedVal;
-                                                                      });
-                                                                    },
-                                                                        (onValidateVal) =>
-                                                                    null,
-                                                                    borderFocusColor:
-                                                                    Theme.of(
-                                                                        context)
-                                                                        .primaryColor,
-                                                                    borderColor: Theme
-                                                                        .of(
-                                                                        context)
-                                                                        .primaryColor,
-                                                                    optionValue: "id",
-                                                                    optionLabel:
-                                                                    "name"),
+                                                          child: Column(
 
-                                                                MyTextboxTitle(
-                                                                    title:
-                                                                        'عنوان',
-                                                                    isNumber:
-                                                                        false,
-                                                                    isPrice:
-                                                                        false,
-                                                                    lengthLimit:
-                                                                        0,
-                                                                    initialText:
-                                                                        _loadedKarbari[index]
-                                                                            [
-                                                                            'name'],
-                                                                    callback:
-                                                                        (value) {
-                                                                      name =
-                                                                          value;
+                                                            children: [
+                                                              const SizedBox(height: 40,),
+                                                              MyWidgets.dropDownWidget(
+                                                                  context,
+                                                                  'جنس',
+                                                                  "جنس را انتخاب کنید",
+                                                                  _selectedJensId,
+                                                                  _loadedJens,
+                                                                      (onChangedVal) {
+                                                                    setState(() {
                                                                       _selectedJensId =
-                                                                          _loadedKarbari[index]
-                                                                              [
-                                                                              'jens_id'];
-                                                                    }),
-                                                                const SizedBox(
-                                                                  height: 20,
+                                                                          onChangedVal;
+                                                                    });
+                                                                  },
+                                                                      (onValidateVal) =>
+                                                                  null,
+                                                                  borderFocusColor:
+                                                                  Theme.of(
+                                                                      context)
+                                                                      .primaryColor,
+                                                                  borderColor: Theme
+                                                                      .of(
+                                                                      context)
+                                                                      .primaryColor,
+                                                                  optionValue: "id",
+                                                                  optionLabel:
+                                                                  "name"),
+
+                                                              MyTextboxTitle(
+                                                                  title:
+                                                                      'عنوان',
+                                                                  isNumber:
+                                                                      false,
+                                                                  isPrice:
+                                                                      false,
+                                                                  lengthLimit:
+                                                                      0,
+                                                                  initialText:
+                                                                      _loadedKarbari[index]
+                                                                          [
+                                                                          'name'],
+                                                                  callback:
+                                                                      (value) {
+                                                                    name =
+                                                                        value;
+
+                                                                  }),
+                                                              const SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              SizedBox(
+                                                                width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width <
+                                                                        600
+                                                                    ? MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width
+                                                                    : 600,
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceAround,
+                                                                  children: [
+                                                                    MyButton(
+                                                                        text:
+                                                                            'ذخیره',
+                                                                        callback:
+                                                                            onPressEdit),
+                                                                    MyButton(
+                                                                        text:
+                                                                            'حذف سایز',
+                                                                        callback:
+                                                                            onPressDelete),
+                                                                  ],
                                                                 ),
-                                                                SizedBox(
-                                                                  width: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width <
-                                                                          600
-                                                                      ? MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width
-                                                                      : 600,
-                                                                  child: Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceAround,
-                                                                    children: [
-                                                                      MyButton(
-                                                                          text:
-                                                                              'ذخیره',
-                                                                          callback:
-                                                                              onPressEdit),
-                                                                      MyButton(
-                                                                          text:
-                                                                              'حذف سایز',
-                                                                          callback:
-                                                                              onPressDelete),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                  height: 20,
-                                                                ),
-                                                              ],
-                                                            ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
                                                       ),
@@ -397,12 +389,16 @@ class _KarbariState extends State<Karbari> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Icon(
-                                                Icons.store,
-                                                color: Colors.black87,
-                                                size: 19,
+                                              Text(
+                                                '${getJensNameById(_loadedKarbari[index]['jens_id'])}',
+                                                style:  TextStyle(
+                                                    color: Theme.of(context).primaryColor,
+                                                    fontFamily: 'IranYekan',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold
+                                                ),
                                               ),
-                                              Text('${getJensNameById(_loadedKarbari[index]['jens_id'])} - ${_loadedKarbari[index]['name']}',
+                                              Text('${_loadedKarbari[index]['name']}',
                                                 style: const TextStyle(
                                                   color: Colors.black87,
                                                   fontFamily: 'IranYekan',
