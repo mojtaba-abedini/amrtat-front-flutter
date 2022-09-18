@@ -22,22 +22,24 @@ class _SizeState extends State<Size> {
   late String name;
 
   late int id;
-  late int paperTool;
-  late int paperArz;
   late int jens_id;
   late int karbari_id;
+  late int paper_size_id;
 
   static const apiUrlSize = SizeApi;
   static const apiUrlKarbari = KarbariApi;
   static const apiUrlJens = JensApi;
+  static const apiUrlPaperSize = PaperSizeApi;
 
   List<dynamic> _loadedSize = [];
   List<dynamic> _loadedJens = [];
   List<dynamic> _loadedKarbari = [];
+  List<dynamic> _loadedPaperSize = [];
   List<dynamic> _filteredKarbari = [];
 
   String? _selectedJensId;
   String? _selectedKarbariId;
+  String? _selectedPaperSizeId;
 
   Future<void> _fetch() async {
     final responseSize = await http.get(Uri.parse(apiUrlSize));
@@ -49,10 +51,14 @@ class _SizeState extends State<Size> {
     final responseKarbari = await http.get(Uri.parse(apiUrlKarbari));
     final dataKarbari = json.decode(responseKarbari.body);
 
+    final responsePaperSize = await http.get(Uri.parse(apiUrlPaperSize));
+    final dataPaperSize = json.decode(responsePaperSize.body);
+
     setState(() {
       _loadedSize = dataSize['data'];
       _loadedJens = dataJens['data'];
       _loadedKarbari = dataKarbari['data'];
+      _loadedPaperSize=dataPaperSize['data'];
     });
 
     _isLoading = false;
@@ -64,8 +70,7 @@ class _SizeState extends State<Size> {
     });
     Navigator.pop(context, true);
 
-    http.Response response = await create(
-        _selectedJensId!, _selectedKarbariId!, name, paperTool, paperArz);
+    http.Response response = await create(_selectedJensId!, _selectedKarbariId!,_selectedPaperSizeId!, name);
     print(response.body);
 
     _fetch();
@@ -77,7 +82,7 @@ class _SizeState extends State<Size> {
     });
     Navigator.pop(context);
     http.Response response = await edit(
-        id, _selectedJensId!, _selectedKarbariId!, name, paperTool, paperArz);
+        id, _selectedJensId!, _selectedKarbariId!,_selectedPaperSizeId!, name);
     print(response.body);
     _fetch();
   }
@@ -92,8 +97,8 @@ class _SizeState extends State<Size> {
     _fetch();
   }
 
-  Future<http.Response> edit(int id, String jens_id, String karbari_id,
-      String name, int paperTool, int paperArz) {
+  Future<http.Response> edit(int id, String jens_id, String karbari_id, String paper_size_id,
+      String name) {
     return http.put(
       Uri.parse("$apiUrlSize/$id"),
       headers: <String, String>{
@@ -102,9 +107,9 @@ class _SizeState extends State<Size> {
       body: jsonEncode({
         'jens_id': int.parse(jens_id),
         'karbari_id': int.parse(karbari_id),
+        'paper_size_id': int.parse(paper_size_id),
         'name': name,
-        'paperTool': paperTool,
-        'paperArz': paperArz,
+
       }),
     );
   }
@@ -118,8 +123,7 @@ class _SizeState extends State<Size> {
     );
   }
 
-  Future<http.Response> create(String jens_id, String karbari_id, String name,
-      int paperTool, int paperArz) {
+  Future<http.Response> create(String jens_id, String karbari_id, String paper_size_id, String name ) {
     return http.post(
       Uri.parse(apiUrlSize),
       headers: <String, String>{
@@ -128,9 +132,9 @@ class _SizeState extends State<Size> {
       body: jsonEncode({
         'jens_id': int.parse(jens_id),
         'karbari_id': int.parse(karbari_id),
+        'paper_size_id': int.parse(paper_size_id),
         'name': name,
-        'paperTool': paperTool,
-        'paperArz': paperArz,
+
       }),
     );
   }
@@ -297,6 +301,7 @@ class _SizeState extends State<Size> {
                                                               optionValue: "id",
                                                               optionLabel:
                                                                   "name"),
+
                                                           MyTextboxTitle(
                                                               title: 'عنوان',
                                                               isNumber: false,
@@ -306,47 +311,32 @@ class _SizeState extends State<Size> {
                                                                   (value) =>
                                                                       name =
                                                                           value),
-                                                          SizedBox(
-                                                            width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width <
-                                                                    600
-                                                                ? MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width
-                                                                : 600,
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Expanded(
-                                                                  child: MyTextboxTitle(
-                                                                      title: 'طول کاغذ',
-                                                                      isNumber: true,
-                                                                      isPrice: false,
-                                                                      lengthLimit: 0,
-                                                                      callback: (value) {
-                                                                        paperTool =
-                                                                            int.parse(value);
-                                                                      }),
-                                                                ),
-                                                                Expanded(
-                                                                  child: MyTextboxTitle(
-                                                                      title: 'عرض کاغذ',
-                                                                      isNumber: true,
-                                                                      isPrice: false,
-                                                                      lengthLimit: 0,
-                                                                      callback: (value) {
-                                                                        paperArz =
-                                                                            int.parse(value);
-                                                                      }),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
+                                                          MyWidgets.dropDownWidget(
+                                                              context,
+                                                              'اندازه کاغذ',
+                                                              "اندازه کاغذ را انتخاب کنید",
+                                                              _selectedPaperSizeId,
+                                                              _loadedPaperSize,
+                                                                  (onChangedVal) {
+                                                                setState(() {
+                                                                  _selectedPaperSizeId =
+                                                                      onChangedVal;
+                                                                });
+                                                              },
+                                                                  (onValidateVal) =>
+                                                              null,
+                                                              borderFocusColor:
+                                                              Theme.of(
+                                                                  context)
+                                                                  .primaryColor,
+                                                              borderColor: Theme
+                                                                  .of(
+                                                                  context)
+                                                                  .primaryColor,
+                                                              optionValue: "id",
+                                                              optionLabel:
+                                                              "name"),
+
                                                           const SizedBox(
                                                             height: 20,
                                                           ),
@@ -430,10 +420,9 @@ class _SizeState extends State<Size> {
                                                     .toString();
 
                                             name = _loadedSize[index]['name'];
-                                            paperTool =
-                                                _loadedSize[index]['paperTool'];
-                                            paperArz =
-                                                _loadedSize[index]['paperArz'];
+                                            paper_size_id =
+                                                _loadedSize[index]['paper_size_id'];
+
 
                                             showModalBottomSheet(
                                                 isScrollControlled: true,
@@ -513,36 +502,31 @@ class _SizeState extends State<Size> {
                                                                                     name = value;
                                                                                     jens_id = _loadedSize[index]['jens_id'];
                                                                                   }),
-                                                                              SizedBox(
-                                                                                width: MediaQuery.of(context).size.width < 600 ? MediaQuery.of(context).size.width : 600,
-                                                                                child: Row(
-                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                  children: [
-                                                                                    Expanded(
-                                                                                      child: MyTextboxTitle(
-                                                                                          title: 'طول کاغذ',
-                                                                                          isNumber: true,
-                                                                                          isPrice: false,
-                                                                                          lengthLimit: 0,
-                                                                                          initialText: _loadedSize[index]['paperTool'].toString(),
-                                                                                          callback: (value) {
-                                                                                            paperTool = int.parse(value);
-                                                                                          }),
-                                                                                    ),
-                                                                                    Expanded(
-                                                                                      child: MyTextboxTitle(
-                                                                                          title: 'عرض کاغذ',
-                                                                                          isNumber: true,
-                                                                                          isPrice: false,
-                                                                                          lengthLimit: 0,
-                                                                                          initialText: _loadedSize[index]['paperArz'].toString(),
-                                                                                          callback: (value) {
-                                                                                            paperArz = int.parse(value);
-                                                                                          }),
-                                                                                    )
-                                                                                  ],
-                                                                                ),
-                                                                              ),
+                                                                              MyWidgets.dropDownWidget(
+                                                                                  context,
+                                                                                  'اندازه کاغذ',
+                                                                                  "اندازه کاغذ را انتخاب کنید",
+                                                                                  _selectedPaperSizeId,
+                                                                                  _loadedPaperSize,
+                                                                                      (onChangedVal) {
+                                                                                    setState(() {
+                                                                                      _selectedPaperSizeId =
+                                                                                          onChangedVal;
+                                                                                    });
+                                                                                  },
+                                                                                      (onValidateVal) =>
+                                                                                  null,
+                                                                                  borderFocusColor:
+                                                                                  Theme.of(
+                                                                                      context)
+                                                                                      .primaryColor,
+                                                                                  borderColor: Theme
+                                                                                      .of(
+                                                                                      context)
+                                                                                      .primaryColor,
+                                                                                  optionValue: "id",
+                                                                                  optionLabel:
+                                                                                  "name"),
                                                                               const SizedBox(
                                                                                 height: 20,
                                                                               ),

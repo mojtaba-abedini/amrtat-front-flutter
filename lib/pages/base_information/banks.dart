@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../api.dart';
 import '../../widgets/button.dart';
 import '../../widgets/textbox_title.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 class Banks extends StatefulWidget {
   const Banks({Key? key}) : super(key: key);
 
@@ -131,12 +131,13 @@ class _BanksState extends State<Banks> {
                           text: 'اضافه کردن بانک',
                           callback: () {
                             showModalBottomSheet(
+                              isScrollControlled: true,
                                 context: context,
                                 backgroundColor: Colors.transparent,
                                 // Add this line of Code
                                 builder: (builder) {
                                   return Container(
-                                    height: 350.0,
+                                    height: kIsWeb ? 350 : MediaQuery.of(context).size.height,
                                     color: Colors.transparent,
                                     child: Container(
                                       decoration: const BoxDecoration(
@@ -149,9 +150,10 @@ class _BanksState extends State<Banks> {
                                           textDirection: TextDirection.rtl,
                                           child: Center(
                                             child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              // mainAxisAlignment:
+                                              //     MainAxisAlignment.center,
                                               children: [
+                                                const SizedBox(height: 40,),
                                                 MyTextboxTitle(
                                                     title: 'نام بانک',
                                                     isNumber: false,
@@ -214,12 +216,13 @@ class _BanksState extends State<Banks> {
                                             id = _loadedList[ index]['id'];
                                             name = _loadedList[ index]['name'];
                                             showModalBottomSheet(
+                                              isScrollControlled: true,
                                                 context: context,
                                                 backgroundColor:
                                                     Colors.transparent,
                                                 builder: (builder) {
                                                   return Container(
-                                                    height: 350.0,
+                                                    height: kIsWeb ? 350 : MediaQuery.of(context).size.height,
                                                     color: Colors.transparent,
                                                     child: Container(
                                                       decoration: const BoxDecoration(
@@ -238,10 +241,11 @@ class _BanksState extends State<Banks> {
                                                               TextDirection.rtl,
                                                           child: Center(
                                                             child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
+                                                              // mainAxisAlignment:
+                                                              //     MainAxisAlignment
+                                                              //         .center,
                                                               children: [
+                                                                const SizedBox(height: 40,),
                                                                 MyTextboxTitle(
                                                                     title: 'نام بانک',
                                                                     isNumber:false,

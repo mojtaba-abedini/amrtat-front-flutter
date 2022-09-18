@@ -24,8 +24,8 @@ class _NewOrderState extends State<NewOrder> {
   bool _isLoading = true;
   bool _isVisible = false;
   late String name;
-  late String phone;
-  late String address;
+  String phone = "";
+  String address = "";
   String? date;
 
   String? _selefonId;
@@ -46,6 +46,7 @@ class _NewOrderState extends State<NewOrder> {
   List _loadedBank = [];
   List _filteredSize = [];
   List _filteredKarbari = [];
+  var _loadedId = [];
 
   static const jensApiUrl = JensApi;
   static const karbariApiUrl = KarbariApi;
@@ -61,7 +62,8 @@ class _NewOrderState extends State<NewOrder> {
     http.Response response = await create(name, phone, address);
     print(response.body);
 
-    _fetchTarafHesab();
+    _fetchTarafHesab().then((value) =>
+        _selectedTarafHesabId = _loadedId[_loadedId.length - 1].toString());
   }
 
   Future<http.Response> create(String name, String phone, String address) {
@@ -70,7 +72,7 @@ class _NewOrderState extends State<NewOrder> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
+      body: jsonEncode({
         'name': name,
         'phone': phone,
         'address': address,
@@ -100,6 +102,16 @@ class _NewOrderState extends State<NewOrder> {
     setState(() {
       _loadedSize = data['data'];
     });
+    _loadedSize.add({
+      'id': 0,
+      'jens_id': 0,
+      'karbari_id': 0,
+      'name': 'سایر',
+      'paperTool': 0,
+      'paperArz': 0,
+      'created_at': null,
+      'updated_at': null
+    });
   }
 
   Future<void> _fetchBank() async {
@@ -116,6 +128,10 @@ class _NewOrderState extends State<NewOrder> {
     setState(() {
       _loadedTarafHesab = data['data'];
     });
+
+    _loadedTarafHesab.forEach((n) => {_loadedId.add(n['id'])});
+    _loadedId.sort();
+
     _isLoading = false;
   }
 
@@ -334,19 +350,9 @@ class _NewOrderState extends State<NewOrder> {
                         _filteredSize = _loadedSize
                             .where((element) =>
                                 element['karbari_id'].toString() ==
-                                _selectedKarbariId.toString())
+                                    _selectedKarbariId.toString() ||
+                                element['karbari_id'].toString() == "0")
                             .toList();
-
-                        _filteredSize.add({
-                          'id': 0,
-                          'jens_id': 1,
-                          'karbari_id': 1,
-                          'name': 'سایر',
-                          'paperTool': 50,
-                          'paperArz': 23,
-                          'created_at': null,
-                          'updated_at': null
-                        });
                       });
                     }, (onValidateVal) => null,
                         borderFocusColor: Theme.of(context).primaryColor,

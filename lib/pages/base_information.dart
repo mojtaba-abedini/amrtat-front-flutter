@@ -3,6 +3,7 @@ import 'package:amertat/pages/base_information/banks.dart';
 import 'package:amertat/pages/base_information/grams.dart';
 import 'package:amertat/pages/base_information/jens.dart';
 import 'package:amertat/pages/base_information/paper_price.dart';
+import 'package:amertat/pages/base_information/paper_size.dart';
 import 'package:amertat/pages/base_information/shit_size.dart';
 import 'package:amertat/pages/base_information/stores.dart';
 import 'package:amertat/pages/base_information/size.dart';
@@ -80,6 +81,12 @@ class _BaseInformationState extends State<BaseInformation> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const ShitSize()))),
+                MyButton(
+                    text: 'اندازه کاغذ',
+                    callback: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PaperSize()))),
                 MyButton(
                     text: 'گرماژ',
                     callback: () => Navigator.push(context,

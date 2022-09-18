@@ -25,3 +25,5 @@ const ServicePriceApi= '${baseUrl}/service';
 const KarbariApi= '${baseUrl}/karbari';
 
 const TarafHesabApi= '${baseUrl}/tarafhesab';
+
+const PaperSizeApi= '${baseUrl}/papersize';
