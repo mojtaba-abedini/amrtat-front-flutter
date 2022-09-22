@@ -30,6 +30,7 @@ class _NewOrderState extends State<NewOrder> {
 
   String? _selefonId;
   String? _talakoobId;
+  String? _printingColorId;
   String? _uvId;
   String? _letterPressId;
   String? _sahafiId;
@@ -37,8 +38,19 @@ class _NewOrderState extends State<NewOrder> {
   String? _selectedKarbariId;
   String? _selectedSizeId;
   String? _selectedBankId;
+  String? _orderStatusId;
   String? _selectedTarafHesabId;
+  String? _tedad;
 
+  String? _totalPrice;
+  String? _beyanePrice;
+  String? _orderDate;
+  String _size_ekhtesasi = "";
+  String _paperSizeId = "";
+
+  int orderNumber = 2845548;
+
+  List _loadedPaperSize = [];
   List _loadedJens = [];
   List _loadedTarafHesab = [];
   List _loadedSize = [];
@@ -53,8 +65,10 @@ class _NewOrderState extends State<NewOrder> {
   static const sizeApiUrl = SizeApi;
   static const bankApiUrl = BankApi;
   static const tarafHesabApiUrl = TarafHesabApi;
+  static const orderApiUrl = OrderApi;
+  static const apiUrlPaperSize = PaperSizeApi;
 
-  void onPressAdd() async {
+  void onPressAddTarafHesab() async {
     setState(() {
       _isLoading = true;
     });
@@ -80,6 +94,79 @@ class _NewOrderState extends State<NewOrder> {
     );
   }
 
+  void onPressAddOrder() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    Navigator.pop(context, true);
+    http.Response response = await createOrder(
+        _orderStatusId!,
+        _selectedTarafHesabId!,
+        _selectedJensId!,
+        _selectedKarbariId!,
+        _selectedSizeId!,
+        _tedad!,
+        _printingColorId!,
+        _selefonId!,
+        _talakoobId!,
+        _uvId!,
+        _letterPressId!,
+        _sahafiId!,
+        _totalPrice!,
+        _beyanePrice!,
+        _orderDate!,
+        _selectedBankId!,
+        _size_ekhtesasi,
+        _paperSizeId);
+    print(response.body);
+  }
+
+  Future<http.Response> createOrder(
+      String status_id,
+      String taraf_hesab_id,
+      String jens_id,
+      String karbari_id,
+      String size_id,
+      String tedad,
+      String printing_color,
+      String selefon_id,
+      String talakoob_id,
+      String uv_id,
+      String letter_press_id,
+      String sahafi_id,
+      String total_price,
+      String peyaneh_price,
+      String order_date,
+      String bank_id,
+      String size_ekhtesasi,
+      String paper_sizes_id) {
+    return http.post(
+      Uri.parse(orderApiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'status_id': int.parse(status_id),
+        'taraf_hesab_id': int.parse(taraf_hesab_id),
+        'jens_id': int.parse(jens_id),
+        'karbari_id': int.parse(karbari_id),
+        'size_id': int.parse(size_id),
+        'tedad': int.parse(tedad),
+        'printing_color': int.parse(printing_color),
+        'selefon_id': int.parse(selefon_id),
+        'talakoob_id': int.parse(talakoob_id),
+        'uv_id': int.parse(uv_id),
+        'letter_press_id': int.parse(letter_press_id),
+        'sahafi_id': int.parse(sahafi_id),
+        'total_price': int.parse(total_price),
+        'peyaneh_price': int.parse(peyaneh_price),
+        'order_date': order_date,
+        'bank_id': int.parse(bank_id),
+      }),
+    );
+  }
+
   Future<void> _fetchJens() async {
     final response = await http.get(Uri.parse(jensApiUrl));
     final data = json.decode(response.body);
@@ -99,8 +186,13 @@ class _NewOrderState extends State<NewOrder> {
   Future<void> _fetchSize() async {
     final response = await http.get(Uri.parse(sizeApiUrl));
     final data = json.decode(response.body);
+
+    final responsePaperSize = await http.get(Uri.parse(apiUrlPaperSize));
+    final dataPaperSize = json.decode(responsePaperSize.body);
+
     setState(() {
       _loadedSize = data['data'];
+      _loadedPaperSize = dataPaperSize['data'];
     });
     _loadedSize.add({
       'id': 0,
@@ -164,8 +256,29 @@ class _NewOrderState extends State<NewOrder> {
                 child: Column(
                   children: [
                     const SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
+                    Text(
+                      "شماره سفارش : $orderNumber",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'وضعیت سفارش',
+                        "وضعیت سفارش را انتخاب کنید",
+                        _orderStatusId,
+                        orderStatus, (onChangedVal) {
+                      setState(() {
+                        _orderStatusId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
                     SizedBox(
                       width: (MediaQuery.of(context).size.width < 600
                           ? MediaQuery.of(context).size.width
@@ -260,7 +373,7 @@ class _NewOrderState extends State<NewOrder> {
                                                               MyButton(
                                                                   text: 'ذخیره',
                                                                   callback:
-                                                                      onPressAdd),
+                                                                      onPressAddTarafHesab),
                                                             ],
                                                           ),
                                                         ),
@@ -386,38 +499,24 @@ class _NewOrderState extends State<NewOrder> {
                           isNumber: false,
                           isPrice: false,
                           lengthLimit: 0,
-                          callback: (value) => newOrderPrice = value),
+                          callback: (value) => _size_ekhtesasi = value),
                     ),
-                    SizedBox(
-                      width: (MediaQuery.of(context).size.width < 600
-                          ? MediaQuery.of(context).size.width
-                          : 640),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Visibility(
-                              visible: _isVisible,
-                              child: MyTextboxTitle(
-                                  title: 'عرض کاغذ',
-                                  isNumber: false,
-                                  isPrice: false,
-                                  lengthLimit: 0,
-                                  callback: (value) => newOrderPrice = value),
-                            ),
-                          ),
-                          Expanded(
-                            child: Visibility(
-                              visible: _isVisible,
-                              child: MyTextboxTitle(
-                                  title: 'طول کاغذ',
-                                  isNumber: false,
-                                  isPrice: false,
-                                  lengthLimit: 0,
-                                  callback: (value) => newOrderPrice = value),
-                            ),
-                          ),
-                        ],
-                      ),
+                    Visibility(
+                      visible: _isVisible,
+                      child: MyWidgets.dropDownWidget(
+                          context,
+                          'اندازه کاغذ',
+                          "اندازه کاغذ را انتخاب کنید",
+                          _paperSizeId,
+                          _loadedPaperSize, (onChangedVal) {
+                        setState(() {
+                          _paperSizeId = onChangedVal;
+                        });
+                      }, (onValidateVal) => null,
+                          borderFocusColor: Theme.of(context).primaryColor,
+                          borderColor: Theme.of(context).primaryColor,
+                          optionValue: "id",
+                          optionLabel: "name"),
                     ),
 
                     MyTextboxTitle(
@@ -425,7 +524,21 @@ class _NewOrderState extends State<NewOrder> {
                         isNumber: true,
                         isPrice: false,
                         lengthLimit: 0,
-                        callback: (value) => newOrderPrice = value),
+                        callback: (value) => _tedad = value),
+                    MyWidgets.dropDownWidget(
+                        context,
+                        'تعداد رنگ چاپ',
+                        "تعداد رنگ چاپ را انتخاب کنید",
+                        _printingColorId,
+                        printingColor, (onChangedVal) {
+                      setState(() {
+                        _printingColorId = onChangedVal;
+                      });
+                    }, (onValidateVal) => null,
+                        borderFocusColor: Theme.of(context).primaryColor,
+                        borderColor: Colors.grey,
+                        optionValue: "id",
+                        optionLabel: "name"),
                     MyWidgets.dropDownWidget(
                         context,
                         'سلفون',
@@ -501,17 +614,19 @@ class _NewOrderState extends State<NewOrder> {
                         isNumber: true,
                         isPrice: true,
                         lengthLimit: 0,
-                        callback: (value) => newOrderPrice = value),
+                        callback: (value) => _totalPrice =
+                            value.replaceAll(RegExp(r'[^\w\s]+'), '')),
                     MyTextboxTitle(
                         title: 'مبلغ بیعانه',
                         isNumber: true,
                         isPrice: true,
                         lengthLimit: 0,
-                        callback: (value) => newOrderFirstPrice = value),
+                        callback: (value) => _beyanePrice =
+                            value.replaceAll(RegExp(r'[^\w\s]+'), '')),
                     MyDatePicker(
                         title: 'تاریخ واریز بیعانه',
                         callback: (jalaliDate, georgianDate) =>
-                            date = jalaliDate),
+                            _orderDate = georgianDate),
                     ////////////////////////////////////// Size Deopdown /////////////////////////////////////
                     MyWidgets.dropDownWidget(
                         context,
@@ -531,7 +646,7 @@ class _NewOrderState extends State<NewOrder> {
                     const SizedBox(
                       height: 20,
                     ),
-                    MyButton(text: 'ذخیره', callback: onPressButton),
+                    MyButton(text: 'ذخیره', callback: onPressAddOrder),
                     const SizedBox(
                       height: 10,
                     ),

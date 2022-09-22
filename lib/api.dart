@@ -27,3 +27,8 @@ const KarbariApi= '${baseUrl}/karbari';
 const TarafHesabApi= '${baseUrl}/tarafhesab';
 
 const PaperSizeApi= '${baseUrl}/papersize';
+
+const OrderApi= '${baseUrl}/orders';
+
+const StatusApi= '${baseUrl}/status';
+

@@ -32,6 +32,7 @@ class _TarafHesabState extends State<TarafHesab> {
       _loadedList = data['data'];
     });
     _isLoading = false;
+
   }
 
 
@@ -216,6 +217,11 @@ class _TarafHesabState extends State<TarafHesab> {
                                   itemCount: _loadedList.length,
                                   itemBuilder: (context, index) => Container(
                                     margin: const EdgeInsets.only(bottom: 20),
+                                    padding: kIsWeb
+                                        ? const EdgeInsets.symmetric(
+                                        horizontal: 20)
+                                        : const EdgeInsets.symmetric(
+                                        horizontal: 5),
                                     child: SizedBox(
                                       height: 50,
                                       child: Container(

@@ -262,6 +262,7 @@ class _PaperSizeState extends State<PaperSize> {
                                             _selectedShitId =
                                                 _loadedList[index]['shit_id'].toString();
 
+
                                             showModalBottomSheet(
                                                 context: context,
                                                 backgroundColor:

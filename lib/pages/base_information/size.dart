@@ -420,8 +420,8 @@ class _SizeState extends State<Size> {
                                                     .toString();
 
                                             name = _loadedSize[index]['name'];
-                                            paper_size_id =
-                                                _loadedSize[index]['paper_size_id'];
+                                            _selectedPaperSizeId =
+                                                _loadedSize[index]['paper_size_id'].toString();
 
 
                                             showModalBottomSheet(
@@ -585,7 +585,8 @@ class _SizeState extends State<Size> {
                                                       color: Theme.of(context)
                                                           .primaryColor,
                                                       fontFamily: 'IranYekan',
-                                                      fontSize: 12,
+                                                      fontSize: 13,
+                                                      fontWeight: FontWeight.bold
                                                     ),
                                                   ),
                                                 ],
