@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../store.dart';
 import '../widgets/button.dart';
 import 'home/new_customer.dart';
 import 'home/new_order.dart';
@@ -14,6 +15,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: thirdColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

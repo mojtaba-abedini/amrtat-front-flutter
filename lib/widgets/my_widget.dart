@@ -61,7 +61,7 @@ class MyWidgets {
                 alignment: Alignment.centerRight,
                 child: Text(
                   title,
-                  style: const TextStyle(color: Palette.mySecondColor, fontSize: 17),
+                  style: const TextStyle(color: Palette.myFirstColor, fontSize: 17),
                 ),
               ),
               const SizedBox(

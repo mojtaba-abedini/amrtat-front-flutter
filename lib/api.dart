@@ -32,3 +32,5 @@ const OrderApi= '${baseUrl}/orders';
 
 const StatusApi= '${baseUrl}/status';
 
+const PaymentApi= '${baseUrl}/payment';
+

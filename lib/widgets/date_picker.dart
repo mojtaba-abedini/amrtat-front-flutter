@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class MyDatePicker extends StatefulWidget {
   MyDatePicker(
-      {Key? key, required this.title, required this.callback})
+      {Key? key, required this.title, required this.callback, this.initialDate})
       : super(key: key);
 
   String? initialDate;
@@ -19,20 +19,44 @@ class MyDatePicker extends StatefulWidget {
 class _MyDatePickerState extends State<MyDatePicker> {
   late TextEditingController pickedDate = TextEditingController();
 
-  String? persianLabel;
+  String? persianLabel, georgianLabel, persianInitDate;
+  List? initDate;
+  Jalali? persianInitDateJalali;
 
-  String? georgianLabel;
+  void getInitPersianDateFromGeorgian() {
+    if (widget.initialDate != null) {
+      initDate = widget.initialDate!.split('-');
+      Gregorian g = Gregorian(int.parse(initDate![0]), int.parse(initDate![1]),
+          int.parse(initDate![2]));
+      persianInitDateJalali = Jalali.fromGregorian(g);
+
+      Jalali j = Jalali(
+          persianInitDateJalali?.year as int,
+          persianInitDateJalali?.month as int,
+          persianInitDateJalali?.day as int);
+
+      persianInitDate = "${j.year}-${j.month}-${j.day}";
+
+      setState(() {
+        pickedDate.text = persianInitDate!;
+      });
+    }
+  }
 
   void refreshDate() {
-
     pickedDate.text = persianLabel!;
     widget.callback(persianLabel, georgianLabel);
+  }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+       getInitPersianDateFromGeorgian();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return SizedBox(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -48,7 +72,8 @@ class _MyDatePickerState extends State<MyDatePicker> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     widget.title,
-                    style: const TextStyle(color: Palette.mySecondColor, fontSize: 17),
+                    style: const TextStyle(
+                        color: Palette.myFirstColor, fontSize: 17),
                   ),
                 ),
                 const SizedBox(
@@ -92,7 +117,7 @@ class _MyDatePickerState extends State<MyDatePicker> {
                                 refreshDate();
                               },
                               icon: const Icon(Icons.date_range),
-                              color: Theme.of(context).primaryColor,
+                              color: Palette.myFirstColor,
                             ),
                           ),
                           contentPadding: kIsWeb
@@ -108,9 +133,9 @@ class _MyDatePickerState extends State<MyDatePicker> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                                 width: 0.9,
-                                color: Theme.of(context).primaryColor),
+                                color: Palette.myFirstColor),
                             borderRadius: BorderRadius.circular(5),
                           ),
                         ),

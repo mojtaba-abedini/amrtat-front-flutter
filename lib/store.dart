@@ -1,39 +1,41 @@
 import 'package:flutter/material.dart';
 
-const firstColor = Color(0xff20958f);
-const secondColor = Color(0xff2b7a77);
+const firstColor = Color(0xffa10035);
+const secondColor = Color(0xff747474);
 const thirdColor = Color(0xfff5f5f5);
+
+
 
 class Palette {
   static const MaterialColor myFirstColor = MaterialColor(
-    0xff20958f,
+    0xffa10035,
     <int, Color>{
-      50: Color.fromRGBO(52, 73, 85, .1),
-      100: Color.fromRGBO(52, 73, 85, .2),
-      200: Color.fromRGBO(52, 73, 85, .3),
-      300: Color.fromRGBO(52, 73, 85, .4),
-      400: Color.fromRGBO(52, 73, 85, .5),
-      500: Color.fromRGBO(52, 73, 85, .6),
-      600: Color.fromRGBO(52, 73, 85, .7),
-      700: Color.fromRGBO(52, 73, 85, .8),
-      800: Color.fromRGBO(52, 73, 85, .9),
-      900: Color.fromRGBO(52, 73, 85, 1.0),
+      50: Color.fromRGBO(161, 0, 53, .1),
+      100: Color.fromRGBO(161, 0, 53, .2),
+      200: Color.fromRGBO(161, 0, 53,.3),
+      300: Color.fromRGBO(161, 0, 53, .4),
+      400: Color.fromRGBO(161, 0, 53, .5),
+      500: Color.fromRGBO(161, 0, 53, .6),
+      600: Color.fromRGBO(161, 0, 53, .7),
+      700: Color.fromRGBO(161, 0, 53, .8),
+      800: Color.fromRGBO(161, 0, 53, .9),
+      900: Color.fromRGBO(161, 0, 53, 1.0),
     },
   );
 
   static const MaterialColor mySecondColor = MaterialColor(
-    0xff20958f,
+    0xff747474,
     <int, Color>{
-      50: Color.fromRGBO(249, 170, 51, .1),
-      100: Color.fromRGBO(249, 170, 51, .2),
-      200: Color.fromRGBO(249, 170, 51, .3),
-      300: Color.fromRGBO(249, 170, 51, .4),
-      400: Color.fromRGBO(249, 170, 51, .5),
-      500: Color.fromRGBO(249, 170, 51, .6),
-      600: Color.fromRGBO(249, 170, 51, .7),
-      700: Color.fromRGBO(249, 170, 51, .8),
-      800: Color.fromRGBO(249, 170, 51, .9),
-      900: Color.fromRGBO(249, 170, 51, 1.0),
+      50: Color.fromRGBO(116, 116, 116, .1),
+      100: Color.fromRGBO(116, 116, 116, .2),
+      200: Color.fromRGBO(116, 116, 116, .3),
+      300: Color.fromRGBO(116, 116, 116, .4),
+      400: Color.fromRGBO(116, 116, 116, .5),
+      500: Color.fromRGBO(116, 116, 116, .6),
+      600: Color.fromRGBO(116, 116, 116, .7),
+      700: Color.fromRGBO(116, 116, 116, .8),
+      800: Color.fromRGBO(116, 116, 116, .9),
+      900: Color.fromRGBO(116, 116, 116, 1.0),
     },
   );
 }

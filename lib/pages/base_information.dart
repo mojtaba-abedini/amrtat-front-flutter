@@ -12,6 +12,7 @@ import 'package:amertat/pages/base_information/vaheds.dart';
 
 import 'package:flutter/material.dart';
 
+import '../store.dart';
 import '../widgets/button.dart';
 import 'base_information/karbari.dart';
 import 'base_information/services_price.dart';
@@ -27,6 +28,7 @@ class _BaseInformationState extends State<BaseInformation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: thirdColor,
       appBar: AppBar(
         title: const Text('اطلاعات پایه'),
         toolbarHeight: 75,

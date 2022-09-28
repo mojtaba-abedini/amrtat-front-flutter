@@ -59,7 +59,7 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
               alignment: Alignment.centerRight,
               child: Text(
                 widget.title,
-                style: const TextStyle(color: Palette.mySecondColor, fontSize: 17),
+                style: const TextStyle(color: Palette.myFirstColor, fontSize: 17),
               ),
             ),
           ),

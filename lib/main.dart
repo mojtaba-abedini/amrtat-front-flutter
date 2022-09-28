@@ -6,6 +6,7 @@ import 'package:amertat/pages/main_page.dart';
 
 import 'package:amertat/pages/orders.dart';
 import 'package:amertat/store.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'آمرتات بگ',
+
+
+
       theme: ThemeData(
         fontFamily: 'IranYekan',
         primarySwatch: Palette.myFirstColor,
@@ -75,10 +79,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      backgroundColor: thirdColor,
         appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {
+
+              },
+              icon: const Icon(Icons.wifi_sharp),
+
+            )
+          ],
           toolbarHeight: 75,
           title: Text(widget.title),
           centerTitle: true,
+          elevation: 0,
+
         ),
         body: _currentPage,
         bottomNavigationBar: BottomNavigationBar(
@@ -128,14 +145,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     )),
               ),
               const Divider(
-                height: 1,
-                thickness: 1,
+                height: 10,
+                thickness: 10,
               ),
               ListTile(
-                leading: const Icon(Icons.home),
+                selectedTileColor: Palette.mySecondColor.shade500,
+                selectedColor: Colors.white,
+
+
+                leading: const Icon(Icons.home,color: Palette.myFirstColor,),
                 title: const Text(
                   'صفحه نخست',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                 ),
                 selected: _selectedDestination == 1,
                 onTap: () {
@@ -143,11 +164,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   _changeTab(1);
                 },
               ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+              ),
+
               ListTile(
-                leading: const Icon(Icons.list),
+                selectedTileColor: Palette.mySecondColor.shade500,
+                selectedColor: Colors.white,
+
+
+
+                leading: const Icon(Icons.list,color: Palette.myFirstColor,),
                 title: const Text(
                   'سفارش ها',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                 ),
                 selected: _selectedDestination == 2,
                 onTap: () {
@@ -155,11 +186,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   _changeTab(2);
                 },
               ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+              ),
               ListTile(
-                leading: const Icon(Icons.store),
+                selectedTileColor: Palette.mySecondColor.shade500,
+                selectedColor: Colors.white,
+
+                leading: const Icon(Icons.store,color: Palette.myFirstColor,),
                 title: const Text(
                   'مدیریت انبار',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                 ),
                 selected: _selectedDestination == 0,
                 onTap: () {
@@ -167,14 +205,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   _changeTab(0);
                 },
               ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+              ),
               ListTile(
-                leading: const Icon(Icons.insert_drive_file_outlined),
+                selectedTileColor: Palette.mySecondColor.shade500,
+                selectedColor: Colors.white,
+
+                leading: const Icon(Icons.insert_drive_file_outlined,color: Palette.myFirstColor,),
                 title: const Text(
                   'اطلاعات پایه',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                 ),
                 selected: _selectedDestination == 3,
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -182,25 +228,61 @@ class _MyHomePageState extends State<MyHomePage> {
                   _changeTab(1);
                 },
               ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+              ),
               ListTile(
-                  leading: const Icon(Icons.announcement_outlined),
+                  selectedTileColor: Palette.mySecondColor.shade500,
+                  selectedColor: Colors.white,
+
+                  leading: const Icon(Icons.announcement_outlined,color: Palette.myFirstColor,),
                   title: const Text(
                     'درباره ما',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                   ),
                   selected: _selectedDestination == 3,
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const About()));
                   }),
+              const Divider(
+                height: 1,
+                thickness: 1,
+              ),
               ListTile(
-                  leading: const Icon(Icons.exit_to_app),
+                  selectedTileColor: Palette.myFirstColor,
+                  selectedColor: Colors.white,
+
+                  leading: const Icon(Icons.exit_to_app,color: Palette.myFirstColor,),
                   title: const Text(
                     'خروج',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
                   ),
                   selected: _selectedDestination == 3,
-                  onTap: () {}),
+                  onTap: () {
+                    Navigator.pop(context);
+                  }),
+              const Divider(
+                height: 1,
+                thickness: 1,
+              ),
+              ListTile(
+                  selectedTileColor: Palette.myFirstColor,
+                  selectedColor: Colors.white,
+
+
+                  title: const Center(
+                    child: Text(
+                      'نسخه آزمایشی',
+                      style: TextStyle(fontSize: 13,color: Palette.myFirstColor),
+                    ),
+                  ),
+                  selected: _selectedDestination == 3,
+                  onTap: () {
+                    Navigator.pop(context);
+                  }),
             ],
           )),
         ));

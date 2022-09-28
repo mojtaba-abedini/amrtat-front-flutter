@@ -95,6 +95,7 @@ class _NewOrderState extends State<NewOrder> {
   }
 
   void onPressAddOrder() async {
+
     setState(() {
       _isLoading = true;
     });
@@ -256,15 +257,15 @@ class _NewOrderState extends State<NewOrder> {
                 child: Column(
                   children: [
                     const SizedBox(
-                      height: 40,
+                      height: 30,
                     ),
-                    Text(
-                      "شماره سفارش : $orderNumber",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor),
-                    ),
+                    // Text(
+                    //   "شماره سفارش : $orderNumber",
+                    //   style: TextStyle(
+                    //       fontSize: 18,
+                    //       fontWeight: FontWeight.bold,
+                    //       color: Theme.of(context).primaryColor),
+                    // ),
                     MyWidgets.dropDownWidget(
                         context,
                         'وضعیت سفارش',
