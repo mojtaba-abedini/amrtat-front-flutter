@@ -337,7 +337,7 @@ class _TarafHesabState extends State<TarafHesab> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               const Icon(
-                                                Icons.store,
+                                                Icons.person,
                                                 color: Colors.black87,
                                                 size: 19,
                                               ),

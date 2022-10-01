@@ -76,8 +76,17 @@ class _OrdersState extends State<Orders> {
   String? _orderDate;
 
   Future<void> _fetchOrders() async {
-    final responseOrder = await http.get(Uri.parse(orderApiUrl));
+
+
+
+    final responseOrder = await http.get((Uri.parse(orderApiUrl)), headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $LoginToken',
+    });
     final dataOrder = json.decode(responseOrder.body);
+
+
 
     final responsePayment = await http.get(Uri.parse(PaymentApiUrl));
     final dataPayment = json.decode(responsePayment.body);
@@ -90,7 +99,8 @@ class _OrdersState extends State<Orders> {
 
 
     setState(() {
-      _loadedOrder = dataOrder['data'];
+
+      dataOrder['status'] == 'success' ? _loadedOrder = dataOrder['data'] : _loadedOrder=[] ;
       _loadedPayment = dataPayment['data'];
       _loadedTarafHesab = dataTarafHesab['data'];
       _loadedStatus = dataStatus['data'];
@@ -324,6 +334,7 @@ class _OrdersState extends State<Orders> {
               constraints: const BoxConstraints.expand(height: 50),
               child: const TabBar(
                 indicatorColor: Palette.myFirstColor,
+                indicatorWeight: 4,
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.white,
                 labelStyle: TextStyle(

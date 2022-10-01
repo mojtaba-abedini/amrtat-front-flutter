@@ -15,7 +15,8 @@ class MyTextboxTitle extends StatefulWidget {
         required this.isPrice,
         required this.lengthLimit,
         this.initialText,
-        this.widgetWidth
+        this.widgetWidth,
+        this.titleColor
 
 
 
@@ -23,6 +24,7 @@ class MyTextboxTitle extends StatefulWidget {
       : super(key: key);
 
   final bool isNumber;
+  Color? titleColor;
   String? initialText;
   final bool isPrice;
   final String title;
@@ -59,7 +61,7 @@ class _MyTextboxTitleState extends State<MyTextboxTitle> {
               alignment: Alignment.centerRight,
               child: Text(
                 widget.title,
-                style: const TextStyle(color: Palette.myFirstColor, fontSize: 17),
+                style:  TextStyle(color: widget.titleColor ?? Palette.myFirstColor, fontSize: 17),
               ),
             ),
           ),

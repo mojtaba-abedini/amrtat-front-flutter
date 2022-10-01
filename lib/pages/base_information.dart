@@ -9,6 +9,7 @@ import 'package:amertat/pages/base_information/stores.dart';
 import 'package:amertat/pages/base_information/size.dart';
 import 'package:amertat/pages/base_information/taraf_hesab.dart';
 import 'package:amertat/pages/base_information/vaheds.dart';
+import 'package:amertat/pages/base_information/vaziat_sefaresh.dart';
 
 import 'package:flutter/material.dart';
 
@@ -89,6 +90,10 @@ class _BaseInformationState extends State<BaseInformation> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const PaperSize()))),
+                MyButton(
+                    text: 'وضعیت سفارش',
+                    callback: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const VaziatSefaresh()))),
                 MyButton(
                     text: 'گرماژ',
                     callback: () => Navigator.push(context,

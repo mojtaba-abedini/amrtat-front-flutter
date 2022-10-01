@@ -2,11 +2,12 @@ import 'package:amertat/store.dart';
 import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
-  const MyButton({Key? key, required this.text, required this.callback})
+   MyButton({Key? key, required this.text, required this.callback,this.isLoading})
       : super(key: key);
 
   final String text;
   final Function callback;
+  bool? isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class MyButton extends StatelessWidget {
               primary: Palette.mySecondColor,
             ),
             onPressed: () => callback(),
-            child: Text(
+            child: isLoading == true ? const SizedBox(width : 25, height:25,child: CircularProgressIndicator(color: Colors.white,strokeWidth: 3,)) : Text(
               text,
               style: TextStyle(
                 color: Colors.white,
@@ -32,6 +33,7 @@ class MyButton extends StatelessWidget {
                 fontSize: text == "+" ? 25 : 15,
               ),
             ),
+
           ),
         ),
         const SizedBox(height: 30,)

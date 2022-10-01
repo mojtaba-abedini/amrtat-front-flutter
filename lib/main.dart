@@ -2,6 +2,7 @@ import 'package:amertat/pages/base_information/about.dart';
 import 'package:amertat/pages/base_information.dart';
 
 import 'package:amertat/pages/home/store_managment.dart';
+import 'package:amertat/pages/login_page.dart';
 import 'package:amertat/pages/main_page.dart';
 
 import 'package:amertat/pages/orders.dart';
@@ -30,7 +31,9 @@ class MyApp extends StatelessWidget {
         fontFamily: 'IranYekan',
         primarySwatch: Palette.myFirstColor,
       ),
-      home: const MyHomePage(title: 'آمرتات بگ'),
+      // home: const MyHomePage(title: 'آمرتات بگ'),
+      home: const LoginPage(),
+
     );
   }
 }
@@ -87,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
 
               },
-              icon: const Icon(Icons.wifi_sharp),
+              icon: const Icon(Icons.wifi),
 
             )
           ],

@@ -289,7 +289,7 @@ class _BanksState extends State<Banks> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               const Icon(
-                                                Icons.assignment_turned_in,
+                                                Icons.monetization_on,
                                                 color: Colors.black87,
                                                 size: 19,
                                               ),

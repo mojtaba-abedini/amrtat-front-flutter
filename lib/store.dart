@@ -53,6 +53,9 @@ Map<int, Color> color = {
   900: const Color.fromRGBO(6, 181, 212, 1.0),
 };
 
+String LoginToken ="";
+
+
 String newCustomerName = "";
 String newCustomerPhone = "";
 String newCustomerContactDate = "";

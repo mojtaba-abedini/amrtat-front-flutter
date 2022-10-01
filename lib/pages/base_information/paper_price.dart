@@ -246,8 +246,7 @@ class _PaperPriceState extends State<PaperPrice> {
                                                         Theme.of(context)
                                                             .primaryColor,
                                                     borderColor:
-                                                        Theme.of(context)
-                                                            .primaryColor,
+                                                       Colors.grey,
                                                     optionValue: "id",
                                                     optionLabel: "name"),
 
@@ -266,9 +265,9 @@ class _PaperPriceState extends State<PaperPrice> {
                                                     borderFocusColor:
                                                         Theme.of(context)
                                                             .primaryColor,
+
                                                     borderColor:
-                                                        Theme.of(context)
-                                                            .primaryColor,
+                                                    Colors.grey,
                                                     optionValue: "id",
                                                     optionLabel: "gram"),
 
@@ -288,8 +287,7 @@ class _PaperPriceState extends State<PaperPrice> {
                                                         Theme.of(context)
                                                             .primaryColor,
                                                     borderColor:
-                                                        Theme.of(context)
-                                                            .primaryColor,
+                                                    Colors.grey,
                                                     optionValue: "id",
                                                     optionLabel: "name"),
 
@@ -433,8 +431,7 @@ class _PaperPriceState extends State<PaperPrice> {
                                                                         Theme.of(context)
                                                                             .primaryColor,
                                                                     borderColor:
-                                                                        Theme.of(context)
-                                                                            .primaryColor,
+                                                                    Colors.grey,
                                                                     optionValue:
                                                                         "id",
                                                                     optionLabel:
@@ -458,8 +455,7 @@ class _PaperPriceState extends State<PaperPrice> {
                                                                         Theme.of(context)
                                                                             .primaryColor,
                                                                     borderColor:
-                                                                        Theme.of(context)
-                                                                            .primaryColor,
+                                                                    Colors.grey,
                                                                     optionValue:
                                                                         "id",
                                                                     optionLabel:
@@ -484,8 +480,7 @@ class _PaperPriceState extends State<PaperPrice> {
                                                                         Theme.of(context)
                                                                             .primaryColor,
                                                                     borderColor:
-                                                                        Theme.of(context)
-                                                                            .primaryColor,
+                                                                    Colors.grey,
                                                                     optionValue:
                                                                         "id",
                                                                     optionLabel:
